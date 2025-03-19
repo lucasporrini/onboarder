@@ -1,0 +1,77 @@
+{
+  "name": "onboarder",
+  "version": "0.0.2",
+  "description": "A simple onboarding tour manager for React applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "prepare": "npm run build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "keywords": [
+    "onboarding",
+    "tour",
+    "guide",
+    "tutorial",
+    "react",
+    "ui"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "framer-motion": "^11.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^7.6.10",
+    "@storybook/addon-interactions": "^7.6.10",
+    "@storybook/addon-links": "^7.6.10",
+    "@storybook/blocks": "^7.6.10",
+    "@storybook/react": "^7.6.10",
+    "@storybook/react-vite": "^7.6.10",
+    "@storybook/testing-library": "^0.2.2",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "jsdom": "^24.0.0",
+    "prettier": "^3.2.5",
+    "storybook": "^7.6.10",
+    "typescript": "^5.0.0",
+    "vite": "^4.5.1",
+    "vitest": "^1.2.2"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "files": [
+    "dist/**/*",
+    "lib/**/*",
+    "src/**/*",
+    "index.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/onboarder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/onboarder/issues"
+  },
+  "homepage": "https://github.com/yourusername/onboarder#readme"
+}
