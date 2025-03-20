@@ -1,105 +1,123 @@
 # Onboarder
 
-A modern, customizable onboarding package for React applications using Tailwind CSS and Origin UI.
-
-## Features
-
-- 🎨 Modern and clean UI design
-- 🎯 Easy to implement step-by-step guides
-- 🎭 Customizable themes and styles
-- ⌨️ Keyboard navigation support
-- 📱 Mobile-friendly
-- 🔄 Smooth transitions and animations
-- 🎮 Game-like experience
+Un package React simple et puissant pour créer des expériences d'onboarding interactives dans vos applications.
 
 ## Installation
 
 ```bash
 npm install onboarder
-# or
+# ou
 yarn add onboarder
 ```
 
-## Quick Start
+## Caractéristiques
+
+- 🚀 Facile à intégrer
+- 🎨 Personnalisable
+- 📱 Responsive
+- 🔄 Navigation fluide
+- ⚛️ Compatible React
+- 🎯 Ciblage d'éléments précis
+- 🌈 Thèmes personnalisables
+
+## Utilisation de base
 
 ```tsx
-import { OnboardingManager } from "onboarder";
+import { Onboarder, Step } from "onboarder";
 
 function App() {
   const steps = [
     {
-      target: "#welcome",
-      content: "Welcome to our app! Let's get started.",
-      title: "Welcome",
+      target: "#welcome-button",
+      title: "Bienvenue !",
+      content: "Ceci est la première étape de votre onboarding.",
+      placement: "bottom",
     },
     {
-      target: "#features",
-      content: "Here are our main features.",
-      title: "Features",
+      target: ".profile-section",
+      title: "Votre profil",
+      content: "Ici vous pouvez gérer vos informations personnelles.",
+      placement: "right",
     },
-    // Add more steps as needed
   ];
 
   return (
-    <OnboardingManager
-      steps={steps}
-      onComplete={() => console.log("Onboarding completed!")}
-    />
+    <div>
+      <Onboarder steps={steps} />
+      {/* Votre application */}
+    </div>
   );
 }
 ```
 
-## Props
+## Configuration
 
-| Prop           | Type         | Default        | Description                                    |
-| -------------- | ------------ | -------------- | ---------------------------------------------- |
-| `steps`        | `Step[]`     | `[]`           | Array of steps for the onboarding tour         |
-| `onComplete`   | `() => void` | -              | Callback function when onboarding is completed |
-| `theme`        | `Theme`      | `defaultTheme` | Custom theme object for styling                |
-| `showProgress` | `boolean`    | `true`         | Whether to show progress indicator             |
-| `showSkip`     | `boolean`    | `true`         | Whether to show skip button                    |
-| `showBack`     | `boolean`    | `true`         | Whether to show back button                    |
+### Props de l'Onboarder
 
-## Step Object
+| Prop       | Type       | Description                              |
+| ---------- | ---------- | ---------------------------------------- |
+| steps      | Step[]     | Liste des étapes de l'onboarding         |
+| onComplete | () => void | Callback appelé à la fin de l'onboarding |
+| theme      | Theme      | Personnalisation du thème                |
+| isOpen     | boolean    | Contrôle l'affichage de l'onboarding     |
+| onClose    | () => void | Callback appelé à la fermeture           |
+
+### Interface Step
 
 ```typescript
 interface Step {
-  target: string; // CSS selector for the target element
-  content: string; // Content to display
-  title?: string; // Optional title
-  placement?: "top" | "bottom" | "left" | "right"; // Tooltip placement
-  disableBeacon?: boolean; // Whether to show beacon
+  target: string; // Sélecteur CSS de l'élément cible
+  title: string; // Titre de l'étape
+  content: string; // Contenu de l'étape
+  placement?: Placement; // Position de la bulle (top, bottom, left, right)
+  offset?: number; // Décalage par rapport à la cible
 }
 ```
 
-## Customization
+## Exemples avancés
 
-### Theme
+### Personnalisation du thème
 
 ```tsx
 const customTheme = {
   primary: "#007bff",
   secondary: "#6c757d",
-  backgroundColor: "#ffffff",
-  textColor: "#333333",
-  // Add more theme properties
+  textColor: "#333",
+  backgroundColor: "#fff",
+  borderRadius: "8px",
+  // ...autres propriétés de thème
 };
 
-<OnboardingManager steps={steps} theme={customTheme} />;
+<Onboarder steps={steps} theme={customTheme} />;
 ```
 
-### Styling
-
-You can customize the appearance using Tailwind CSS classes:
+### Contrôle programmatique
 
 ```tsx
-<OnboardingManager steps={steps} className="custom-onboarding" />
+function App() {
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setIsOnboardingOpen(true)}>
+        Démarrer l'onboarding
+      </button>
+
+      <Onboarder
+        steps={steps}
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+        onComplete={() => console.log("Onboarding terminé !")}
+      />
+    </div>
+  );
+}
 ```
 
-## Contributing
+## Contribution
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
 
-## License
+## Licence
 
-MIT © [Your Name]
+ISC

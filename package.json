@@ -1,67 +1,55 @@
 {
   "name": "onboarder",
-  "version": "0.0.3",
-  "description": "A simple onboarding tour manager for React applications",
+  "version": "0.0.5",
+  "description": "Un package React simple et puissant pour créer des expériences d'onboarding interactives",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "vitest",
-    "lint": "eslint . --ext .ts,.tsx",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "prepare": "npm run build"
+    "prepublish": "npm run build",
+    "test": "jest",
+    "watch": "tsc --watch",
+    "format": "prettier --write src/**/*.ts src/**/*.tsx",
+    "lint": "eslint src/**/*.ts src/**/*.tsx"
   },
-  "keywords": [
-    "onboarding",
-    "tour",
-    "guide",
-    "tutorial",
-    "react",
-    "ui"
-  ],
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "framer-motion": "^11.0.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.1",
-    "@typescript-eslint/parser": "^7.0.1",
-    "@vitejs/plugin-react": "^4.2.1",
-    "@vitest/coverage-v8": "^1.2.2",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "jsdom": "^24.0.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.0.0",
-    "vite": "^4.5.1",
-    "vitest": "^1.2.2"
-  },
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "files": [
-    "dist/**/*",
-    "lib/**/*",
-    "src/**/*",
-    "index.ts"
-  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/onboarder.git"
+    "url": "git+https://github.com/lucasporrini/onboarder.git"
   },
+  "keywords": [
+    "react",
+    "onboarding",
+    "tutorial",
+    "guide",
+    "tour",
+    "user-onboarding",
+    "product-tour",
+    "walkthrough"
+  ],
+  "author": "Lucas Porrini",
+  "license": "ISC",
+  "type": "module",
   "bugs": {
-    "url": "https://github.com/yourusername/onboarder/issues"
+    "url": "https://github.com/lucasporrini/onboarder/issues"
   },
-  "homepage": "https://github.com/yourusername/onboarder#readme"
+  "homepage": "https://github.com/lucasporrini/onboarder#readme",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.12",
+    "@typescript-eslint/eslint-plugin": "^8.27.0",
+    "@typescript-eslint/parser": "^8.27.0",
+    "eslint": "^9.22.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "react": "^19.0.0"
+  }
 }
