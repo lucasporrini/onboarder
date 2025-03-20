@@ -50,6 +50,41 @@ function App() {
 }
 ```
 
+## Utilisation avec Next.js
+
+Si vous utilisez Next.js, assurez-vous d'ajouter la directive "use client" en haut de votre composant :
+
+```tsx
+"use client";
+
+import { Onboarder } from "onboarder";
+
+function YourComponent() {
+  const steps = [
+    {
+      target: "#welcome-button",
+      title: "Bienvenue !",
+      content: "Ceci est la première étape de votre onboarding.",
+      placement: "bottom",
+    },
+  ];
+
+  return (
+    <div>
+      <Onboarder
+        steps={steps}
+        onComplete={() => console.log("Onboarding terminé !")}
+      />
+      {/* Votre contenu */}
+    </div>
+  );
+}
+
+export default YourComponent;
+```
+
+Cette directive est nécessaire car Onboarder utilise des fonctionnalités interactives qui nécessitent d'être exécutées côté client.
+
 ## Configuration
 
 ### Props de l'Onboarder

@@ -14,8 +14,9 @@ export const StepContent: React.FC<StepContentProps> = ({
 }) => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const contentRef = useRef<HTMLDivElement>(null);
+  const positioningRef = useRef<number>(0);
 
-  useEffect(() => {
+  const calculatePosition = () => {
     const targetElement = document.querySelector(step.target);
     if (targetElement && contentRef.current) {
       const targetRect = targetElement.getBoundingClientRect();
@@ -46,9 +47,63 @@ export const StepContent: React.FC<StepContentProps> = ({
           left = targetRect.left + (targetRect.width - contentRect.width) / 2;
       }
 
+      // Ajuster la position pour éviter les débordements
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      // Empêcher le débordement à droite
+      if (left + contentRect.width > windowWidth) {
+        left = windowWidth - contentRect.width - 10;
+      }
+
+      // Empêcher le débordement à gauche
+      if (left < 10) {
+        left = 10;
+      }
+
+      // Empêcher le débordement en bas
+      if (top + contentRect.height > windowHeight) {
+        top = windowHeight - contentRect.height - 10;
+      }
+
+      // Empêcher le débordement en haut
+      if (top < 10) {
+        top = 10;
+      }
+
       setPosition({ top, left });
     }
-  }, [step]);
+  };
+
+  useEffect(() => {
+    // Nettoyer l'ancien timer si existant
+    if (positioningRef.current) {
+      clearTimeout(positioningRef.current);
+    }
+
+    // Calculer la position initiale
+    calculatePosition();
+
+    // Ajouter un écouteur de redimensionnement avec debounce
+    const handleResize = () => {
+      if (positioningRef.current) {
+        clearTimeout(positioningRef.current);
+      }
+      positioningRef.current = window.setTimeout(calculatePosition, 100);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Recalculer la position après un court délai pour s'assurer que le DOM est prêt
+    positioningRef.current = window.setTimeout(calculatePosition, 50);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (positioningRef.current) {
+        clearTimeout(positioningRef.current);
+      }
+    };
+  }, [step.target, step.placement, step.offset]);
 
   const styles: React.CSSProperties = {
     position: "fixed",
