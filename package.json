@@ -1,6 +1,6 @@
 {
   "name": "onboarder",
-  "version": "0.0.5",
+  "version": "0.0.17",
   "description": "Un package React simple et puissant pour créer des expériences d'onboarding interactives",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -50,6 +50,6 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "react": "^19.0.0"
+    "react": ">=16.8.0"
   }
 }
