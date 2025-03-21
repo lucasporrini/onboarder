@@ -13,6 +13,7 @@ export type TourContextType = {
   currentStep: Step | null;
   currentStepIndex: number;
   isRunning: boolean;
+  showSkip: boolean;
   start: (steps: Step[]) => void;
   stop: () => void;
   next: () => void;
