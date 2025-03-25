@@ -247,14 +247,14 @@ Skip.displayName = "OnBoarder.Skip";
  * -----------------------------------------------------------------------------------------------*/
 
 export const OnBoarder = {
-  Root: Root as React.FC<RootProps>,
-  Step: Step as React.FC<StepProps>,
-  Title: Title as React.FC<TitleProps>,
-  Content: Content as React.FC<ContentProps>,
-  Controls: Controls as React.FC<ControlsProps>,
-  Prev: Prev as React.FC<ButtonProps>,
-  Next: Next as React.FC<ButtonProps>,
-  Skip: Skip as React.FC<ButtonProps>,
+  Root,
+  Step,
+  Title,
+  Content,
+  Controls,
+  Prev,
+  Next,
+  Skip,
 };
 
 export { useOnBoarder };

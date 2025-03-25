@@ -1,8 +1,13 @@
 export type Step = {
   id?: string;
-  content: string | React.ReactNode;
   target: string;
-  position?: "top" | "bottom" | "left" | "right" | "center";
+  title: string;
+  content: string | React.ReactNode;
+  placement?: "top" | "bottom" | "left" | "right" | "center";
+  offset?: number;
+  highlight?: boolean;
+  highlightColor?: string;
+  highlightBorderRadius?: string;
   isModal?: boolean;
   beforeEnter?: () => void | Promise<void>;
   afterExit?: () => void | Promise<void>;

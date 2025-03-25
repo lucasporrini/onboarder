@@ -19,13 +19,13 @@ export const usePosition = (step: Step | undefined) => {
       const target = document.querySelector(step.target);
       if (target) {
         const rect = target.getBoundingClientRect();
-        const position = step.position || "bottom";
+        const placement = step.placement || "bottom";
 
         let top = rect.bottom + 10;
         let left = rect.left + rect.width / 2;
         let transform = "translate(-50%, 0)";
 
-        switch (position) {
+        switch (placement) {
           case "top":
             top = rect.top - 10;
             left = rect.left + rect.width / 2;
