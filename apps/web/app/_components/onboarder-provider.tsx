@@ -1,27 +1,49 @@
 "use client";
 
-import type { Step } from "onboarder";
-import { OnBoarder, OnBoarderProvider } from "onboarder";
+import { OnBoarder, OnBoarderProvider, useOnBoarderProvider } from "onboarder";
+import { useEffect } from "react";
 
 interface OnboardingProviderProps {
   children: React.ReactNode;
-  steps: Step[];
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
 }
 
-export const OnboardingProvider = () => {
+export const OnboardingProvider = ({
+  children,
+  onStepChange,
+  onComplete,
+}: OnboardingProviderProps) => {
+  const { start, stop, isOpen } = useOnBoarderProvider();
+
+  useEffect(() => {
+    start();
+  }, []);
+
   return (
     <OnBoarderProvider>
-      <OnBoarder.Step selector="#mon-selector">
-        <OnBoarder.Title>Mon title</OnBoarder.Title>
-        <OnBoarder.Content>Mon content</OnBoarder.Content>
-      </OnBoarder.Step>
-      <OnBoarder.Controls>
-        <OnBoarder.Prev />
-        <OnBoarder.Next />
-        <OnBoarder.Skip />
-      </OnBoarder.Controls>
+      <OnBoarder.Root onStepChange={onStepChange} onComplete={onComplete}>
+        <OnBoarder.Step selector="#welcome-button">
+          <OnBoarder.Title>Bienvenue !</OnBoarder.Title>
+          <OnBoarder.Content>
+            Ceci est la première étape de votre onboarding.
+          </OnBoarder.Content>
+        </OnBoarder.Step>
+
+        <OnBoarder.Step selector=".profile-section">
+          <OnBoarder.Title>Votre profil</OnBoarder.Title>
+          <OnBoarder.Content>
+            Ici vous pouvez gérer vos informations personnelles.
+          </OnBoarder.Content>
+        </OnBoarder.Step>
+
+        <OnBoarder.Controls>
+          <OnBoarder.Prev />
+          <OnBoarder.Next />
+          <OnBoarder.Skip />
+        </OnBoarder.Controls>
+      </OnBoarder.Root>
+      {children}
     </OnBoarderProvider>
   );
 };
