@@ -65,21 +65,10 @@ interface RootProps {
   children: React.ReactNode;
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
-  closeOnOutsideClick?: boolean;
-  closeOnEscape?: boolean;
 }
 
 const Root = React.forwardRef<HTMLDivElement, RootProps>(
-  (
-    {
-      children,
-      onStepChange,
-      onComplete,
-      closeOnOutsideClick = true,
-      closeOnEscape = true,
-    },
-    forwardedRef
-  ) => {
+  ({ children, onStepChange, onComplete }, forwardedRef) => {
     const [state, setState] = React.useState({
       currentStepIndex: 0,
       isOpen: false,
