@@ -170,6 +170,9 @@ importers:
         specifier: '>=16.8.0'
         version: 19.0.0(react@19.0.0)
     devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
