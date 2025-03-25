@@ -1,7 +1,7 @@
 "use client";
 
 import type { Step } from "onboarder";
-import { OnBoarder } from "onboarder";
+import { OnBoarder, OnBoarderProvider } from "onboarder";
 
 interface OnboardingProviderProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ interface OnboardingProviderProps {
 
 export const OnboardingProvider = () => {
   return (
-    <OnBoarder.Root>
+    <OnBoarderProvider>
       <OnBoarder.Step selector="#mon-selector">
         <OnBoarder.Title>Mon title</OnBoarder.Title>
         <OnBoarder.Content>Mon content</OnBoarder.Content>
@@ -22,6 +22,6 @@ export const OnboardingProvider = () => {
         <OnBoarder.Next />
         <OnBoarder.Skip />
       </OnBoarder.Controls>
-    </OnBoarder.Root>
+    </OnBoarderProvider>
   );
 };
