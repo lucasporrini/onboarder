@@ -7,8 +7,6 @@ export {
 
 export { usePosition } from "./hooks/usePosition";
 
-export type { ThemeConfig } from "./types";
-
 export type { TourContextType } from "./types";
 
 export * from "./types";

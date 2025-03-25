@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useContext } from "react";
-import { type ThemeConfig } from "../types";
 
 /* -------------------------------------------------------------------------------------------------
  * Types
@@ -15,13 +14,12 @@ interface OnBoarderState {
   steps: Step[];
   currentStepIndex: number;
   isOpen: boolean;
-  theme?: ThemeConfig;
 }
 
 interface OnBoarderContextValue extends OnBoarderState {
   next: () => void;
   prev: () => void;
-  start: (steps: Step[], theme?: ThemeConfig) => void;
+  start: (steps: Step[]) => void;
   stop: () => void;
   isFirstStep: boolean;
   isLastStep: boolean;
@@ -63,7 +61,6 @@ const useOnBoarder = () => {
 interface ProviderProps {
   children: React.ReactNode;
   initialSteps?: Step[];
-  theme?: ThemeConfig;
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
   closeOnOutsideClick?: boolean;
@@ -81,7 +78,6 @@ interface ProviderProps {
 const Provider = ({
   children,
   initialSteps = [],
-  theme,
   onStepChange,
   onComplete,
   closeOnOutsideClick = true,
@@ -92,7 +88,6 @@ const Provider = ({
     steps: initialSteps,
     currentStepIndex: 0,
     isOpen: false,
-    theme,
   });
 
   const next = useCallback(() => {
@@ -127,12 +122,11 @@ const Provider = ({
     });
   }, [onStepChange]);
 
-  const start = useCallback((steps: Step[], theme?: ThemeConfig) => {
+  const start = useCallback((steps: Step[]) => {
     setState({
       steps,
       currentStepIndex: 0,
       isOpen: true,
-      theme,
     });
   }, []);
 
