@@ -2,8 +2,8 @@ import {
   OnBoarder,
   useOnBoarder,
   usePosition,
+  type OnBoarderContextValue,
   type Step,
-  type TourContextType,
 } from "../src";
 
 describe("Onboarder exports", () => {
@@ -22,20 +22,18 @@ describe("Onboarder exports", () => {
     };
     expect(typeof step).toBe("object");
 
-    const mockSteps: Step[] = [step];
-    const mockTourContext: TourContextType = {
-      steps: mockSteps,
+    const mockTourContext: OnBoarderContextValue = {
       currentStep: null,
       currentStepIndex: 0,
-      isRunning: false,
-      showSkip: true,
-      start: () => {},
-      stop: () => {},
+      isOpen: false,
       next: () => {},
       prev: () => {},
+      stop: () => {},
       isFirstStep: true,
       isLastStep: true,
-      progress: 0,
+      onStepChange: () => {},
+      onComplete: () => {},
+      position: { top: 0, left: 0, transform: "translate(0, 0)" },
     };
     expect(typeof mockTourContext).toBe("object");
   });

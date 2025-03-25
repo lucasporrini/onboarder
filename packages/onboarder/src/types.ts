@@ -1,5 +1,4 @@
 export type Step = {
-  id?: string;
   target: string;
   title: string;
   content: string | React.ReactNode;
@@ -13,17 +12,62 @@ export type Step = {
   afterExit?: () => void | Promise<void>;
 };
 
-export type TourContextType = {
-  steps: Step[];
-  currentStep: Step | null;
+export type Position = {
+  top: number;
+  left: number;
+  transform: string;
+};
+
+export interface OnBoarderContextValue {
   currentStepIndex: number;
-  isRunning: boolean;
-  showSkip: boolean;
-  start: (steps: Step[]) => void;
-  stop: () => void;
+  isOpen: boolean;
   next: () => void;
   prev: () => void;
+  stop: () => void;
   isFirstStep: boolean;
   isLastStep: boolean;
-  progress: number;
-};
+  onStepChange?: (index: number) => void;
+  onComplete?: () => void;
+  currentStep: Step | null;
+  position: Position;
+}
+
+export interface StepProps {
+  children: React.ReactNode;
+  selector: string;
+  asChild?: boolean;
+}
+
+export interface TitleProps {
+  children: React.ReactNode;
+  asChild?: boolean;
+}
+
+export interface ContentProps {
+  children: React.ReactNode;
+  asChild?: boolean;
+}
+
+export interface ControlsProps {
+  children: React.ReactNode;
+  asChild?: boolean;
+}
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: React.ReactNode;
+  asChild?: boolean;
+}
+
+export interface RootProps {
+  children: React.ReactNode;
+  onStepChange?: (index: number) => void;
+  onComplete?: () => void;
+}
+
+export interface OnBoarderProviderProps {
+  children: React.ReactNode;
+  steps: Step[];
+  onStepChange?: (index: number) => void;
+  onComplete?: () => void;
+}
