@@ -1,21 +1,23 @@
 "use client";
 
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactElement,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 import { Step } from "../types";
 import { OnBoarder } from "./OnBoarder";
 
-interface OnBoarderProviderProps {
-  children: React.ReactNode;
-  steps: Step[];
-  onStepChange?: (index: number) => void;
-  onComplete?: () => void;
-}
-
-const OnBoarderProviderContext = createContext<{
+interface OnBoarderProviderContextValue {
   start: () => void;
   stop: () => void;
   isOpen: boolean;
-} | null>(null);
+}
+
+const OnBoarderProviderContext =
+  createContext<OnBoarderProviderContextValue | null>(null);
 
 export const useOnBoarderProvider = () => {
   const context = useContext(OnBoarderProviderContext);
@@ -27,9 +29,31 @@ export const useOnBoarderProvider = () => {
   return context;
 };
 
+interface OnBoarderProviderProps {
+  children: React.ReactNode;
+  onStepChange?: (index: number) => void;
+  onComplete?: () => void;
+}
+
+interface RootChildProps {
+  children: React.ReactNode;
+}
+
+interface StepChildProps {
+  selector: string;
+  children: React.ReactNode;
+}
+
+interface TitleChildProps {
+  children: React.ReactNode;
+}
+
+interface ContentChildProps {
+  children: React.ReactNode;
+}
+
 export const OnBoarderProvider = ({
   children,
-  steps,
   onStepChange,
   onComplete,
 }: OnBoarderProviderProps) => {
@@ -43,21 +67,46 @@ export const OnBoarderProvider = ({
     setIsOpen(false);
   }, []);
 
+  // Extract steps from children
+  const steps: Step[] = React.Children.toArray(children)
+    .filter(
+      (child): child is ReactElement<RootChildProps> =>
+        React.isValidElement(child) && child.type === OnBoarder.Root
+    )
+    .map((child) => {
+      return React.Children.toArray(child.props.children)
+        .filter(
+          (stepChild): stepChild is ReactElement<StepChildProps> =>
+            React.isValidElement(stepChild) && stepChild.type === OnBoarder.Step
+        )
+        .map((stepChild) => {
+          const title = React.Children.toArray(stepChild.props.children).find(
+            (titleChild): titleChild is ReactElement<TitleChildProps> =>
+              React.isValidElement(titleChild) &&
+              titleChild.type === OnBoarder.Title
+          )?.props.children;
+
+          const content = React.Children.toArray(stepChild.props.children).find(
+            (contentChild): contentChild is ReactElement<ContentChildProps> =>
+              React.isValidElement(contentChild) &&
+              contentChild.type === OnBoarder.Content
+          )?.props.children;
+
+          return {
+            target: stepChild.props.selector,
+            title: typeof title === "string" ? title : "",
+            content: content || "",
+            placement: "bottom" as const,
+            highlight: true,
+          };
+        });
+    })
+    .flat();
+
   return (
     <OnBoarderProviderContext.Provider value={{ start, stop, isOpen }}>
       <OnBoarder.Root onStepChange={onStepChange} onComplete={onComplete}>
         {children}
-        {steps.map((step, index) => (
-          <OnBoarder.Step key={step.target} selector={step.target}>
-            <OnBoarder.Title>{step.title}</OnBoarder.Title>
-            <OnBoarder.Content>{step.content}</OnBoarder.Content>
-            <OnBoarder.Controls>
-              {index > 0 && <OnBoarder.Prev />}
-              <OnBoarder.Next />
-              <OnBoarder.Skip />
-            </OnBoarder.Controls>
-          </OnBoarder.Step>
-        ))}
       </OnBoarder.Root>
     </OnBoarderProviderContext.Provider>
   );
