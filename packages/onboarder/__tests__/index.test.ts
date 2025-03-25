@@ -18,6 +18,7 @@ describe("Onboarder exports", () => {
     const step: Step = {
       target: "#test",
       content: "Test content",
+      title: "Test title",
     };
     expect(typeof step).toBe("object");
 
