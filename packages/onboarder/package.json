@@ -1,6 +1,6 @@
 {
   "name": "onboarder",
-  "version": "0.0.43",
+  "version": "0.0.44",
   "description": "Un package React simple et puissant pour créer des expériences d'onboarding interactives",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
