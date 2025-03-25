@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Step } from "../types";
 
 type Position = {
@@ -14,7 +14,7 @@ export const usePosition = (step: Step | undefined) => {
     transform: "translate(0, 0)",
   });
 
-  useEffect(() => {
+  const updatePosition = useCallback(() => {
     if (step?.target) {
       const target = document.querySelector(step.target);
       if (target) {
@@ -55,6 +55,22 @@ export const usePosition = (step: Step | undefined) => {
       }
     }
   }, [step]);
+
+  useEffect(() => {
+    updatePosition();
+
+    const handleResize = () => {
+      requestAnimationFrame(updatePosition);
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleResize);
+    };
+  }, [updatePosition]);
 
   return position;
 };
