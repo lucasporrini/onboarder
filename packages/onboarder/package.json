@@ -54,7 +54,8 @@
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "tsup": "^8.4.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@repo/eslint-config": "workspace:*"
   },
   "dependencies": {
     "@radix-ui/react-context": "^1.1.1",
