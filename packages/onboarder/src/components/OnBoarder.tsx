@@ -2,6 +2,8 @@
 
 import { Slot } from "@radix-ui/react-slot";
 import React, { createContext, useCallback, useContext } from "react";
+import { usePosition } from "../hooks/usePosition";
+import { Step } from "../types";
 
 /* -------------------------------------------------------------------------------------------------
  * Types
@@ -17,6 +19,8 @@ interface OnBoarderContextValue {
   isLastStep: boolean;
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
+  currentStep: Step | null;
+  position: { top: number; left: number; transform: string };
 }
 
 interface StepProps {
@@ -74,7 +78,11 @@ const Root = React.forwardRef<HTMLDivElement, RootProps>(
     const [state, setState] = React.useState({
       currentStepIndex: 0,
       isOpen: false,
+      steps: [] as Step[],
     });
+
+    const currentStep = state.steps[state.currentStepIndex];
+    const position = usePosition(currentStep);
 
     const next = useCallback(() => {
       setState((prev) => {
@@ -111,9 +119,11 @@ const Root = React.forwardRef<HTMLDivElement, RootProps>(
       prev,
       stop,
       isFirstStep: state.currentStepIndex === 0,
-      isLastStep: false, // Will be computed based on number of steps
+      isLastStep: state.currentStepIndex === state.steps.length - 1,
       onStepChange,
       onComplete,
+      currentStep,
+      position,
     };
 
     return (
@@ -130,12 +140,26 @@ Root.displayName = "OnBoarder.Root";
 
 const Step = React.forwardRef<HTMLDivElement, StepProps>(
   ({ children, selector, asChild = false }, forwardedRef) => {
+    const { currentStep, position } = useOnBoarder();
     const Component = asChild ? Slot : "div";
+    const isActive = currentStep?.target === selector;
+
     return (
       <Component
         ref={forwardedRef}
         data-onboarder-step
         data-selector={selector}
+        style={
+          isActive
+            ? {
+                position: "absolute",
+                top: position.top,
+                left: position.left,
+                transform: position.transform,
+                zIndex: 1000,
+              }
+            : undefined
+        }
       >
         {children}
       </Component>

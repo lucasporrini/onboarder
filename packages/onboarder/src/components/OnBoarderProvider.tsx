@@ -1,10 +1,12 @@
 "use client";
 
 import React, { createContext, useCallback, useContext, useState } from "react";
+import { Step } from "../types";
 import { OnBoarder } from "./OnBoarder";
 
 interface OnBoarderProviderProps {
   children: React.ReactNode;
+  steps: Step[];
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
 }
@@ -27,6 +29,7 @@ export const useOnBoarderProvider = () => {
 
 export const OnBoarderProvider = ({
   children,
+  steps,
   onStepChange,
   onComplete,
 }: OnBoarderProviderProps) => {
@@ -44,6 +47,17 @@ export const OnBoarderProvider = ({
     <OnBoarderProviderContext.Provider value={{ start, stop, isOpen }}>
       <OnBoarder.Root onStepChange={onStepChange} onComplete={onComplete}>
         {children}
+        {steps.map((step, index) => (
+          <OnBoarder.Step key={step.target} selector={step.target}>
+            <OnBoarder.Title>{step.title}</OnBoarder.Title>
+            <OnBoarder.Content>{step.content}</OnBoarder.Content>
+            <OnBoarder.Controls>
+              {index > 0 && <OnBoarder.Prev />}
+              <OnBoarder.Next />
+              <OnBoarder.Skip />
+            </OnBoarder.Controls>
+          </OnBoarder.Step>
+        ))}
       </OnBoarder.Root>
     </OnBoarderProviderContext.Provider>
   );
