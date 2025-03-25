@@ -34,7 +34,7 @@ export default function Home() {
             priority
           />
           <ol>
-            <li id="mon-selector">
+            <li id="mon-selector" className="relative">
               Get started by editing <code>apps/docs/app/page.tsx</code>
             </li>
             <li>Save and see your changes instantly.</li>
