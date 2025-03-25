@@ -63,6 +63,9 @@ importers:
       next:
         specifier: ^15.2.1
         version: 15.2.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      onboarder:
+        specifier: workspace:*
+        version: link:../../packages/onboarder
       react:
         specifier: ^19.0.0
         version: 19.0.0
