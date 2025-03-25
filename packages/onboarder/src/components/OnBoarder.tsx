@@ -1,53 +1,18 @@
 "use client";
 
 import { Slot } from "@radix-ui/react-slot";
-import React, { createContext, useCallback, useContext } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { usePosition } from "../hooks/usePosition";
-import { Step } from "../types";
-
-/* -------------------------------------------------------------------------------------------------
- * Types
- * -----------------------------------------------------------------------------------------------*/
-
-interface OnBoarderContextValue {
-  currentStepIndex: number;
-  isOpen: boolean;
-  next: () => void;
-  prev: () => void;
-  stop: () => void;
-  isFirstStep: boolean;
-  isLastStep: boolean;
-  onStepChange?: (index: number) => void;
-  onComplete?: () => void;
-  currentStep: Step | null;
-  position: { top: number; left: number; transform: string };
-}
-
-interface StepProps {
-  children: React.ReactNode;
-  selector: string;
-  asChild?: boolean;
-}
-
-interface TitleProps {
-  children: React.ReactNode;
-  asChild?: boolean;
-}
-
-interface ContentProps {
-  children: React.ReactNode;
-  asChild?: boolean;
-}
-
-interface ControlsProps {
-  children: React.ReactNode;
-  asChild?: boolean;
-}
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: React.ReactNode;
-  asChild?: boolean;
-}
+import {
+  ButtonProps,
+  ContentProps,
+  ControlsProps,
+  OnBoarderContextValue,
+  RootProps,
+  Step,
+  StepProps,
+  TitleProps,
+} from "../types";
 
 /* -------------------------------------------------------------------------------------------------
  * Context
@@ -67,15 +32,9 @@ const useOnBoarder = () => {
  * Components
  * -----------------------------------------------------------------------------------------------*/
 
-interface RootProps {
-  children: React.ReactNode;
-  onStepChange?: (index: number) => void;
-  onComplete?: () => void;
-}
-
 const Root = React.forwardRef<HTMLDivElement, RootProps>(
   ({ children, onStepChange, onComplete }, forwardedRef) => {
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
       currentStepIndex: 0,
       isOpen: false,
       steps: [] as Step[],
@@ -113,7 +72,7 @@ const Root = React.forwardRef<HTMLDivElement, RootProps>(
       }));
     }, []);
 
-    const value = {
+    const value: OnBoarderContextValue = {
       ...state,
       next,
       prev,
@@ -279,14 +238,6 @@ export const OnBoarder = {
   Prev,
   Next,
   Skip,
-};
+} as const;
 
 export { useOnBoarder };
-export type {
-  ButtonProps,
-  ContentProps,
-  ControlsProps,
-  RootProps,
-  StepProps,
-  TitleProps,
-};

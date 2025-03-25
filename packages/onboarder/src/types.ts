@@ -1,7 +1,9 @@
+import { ReactNode } from "react";
+
 export type Step = {
   target: string;
   title: string;
-  content: string | React.ReactNode;
+  content: string | ReactNode;
   placement?: "top" | "bottom" | "left" | "right" | "center";
   offset?: number;
   highlight?: boolean;
@@ -33,40 +35,40 @@ export interface OnBoarderContextValue {
 }
 
 export interface StepProps {
-  children: React.ReactNode;
+  children: ReactNode;
   selector: string;
   asChild?: boolean;
 }
 
 export interface TitleProps {
-  children: React.ReactNode;
+  children: ReactNode;
   asChild?: boolean;
 }
 
 export interface ContentProps {
-  children: React.ReactNode;
+  children: ReactNode;
   asChild?: boolean;
 }
 
 export interface ControlsProps {
-  children: React.ReactNode;
+  children: ReactNode;
   asChild?: boolean;
 }
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: React.ReactNode;
+  children?: ReactNode;
   asChild?: boolean;
 }
 
 export interface RootProps {
-  children: React.ReactNode;
+  children: ReactNode;
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
 }
 
 export interface OnBoarderProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
   steps: Step[];
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
