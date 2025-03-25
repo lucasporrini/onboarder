@@ -1,8 +1,11 @@
-export {
-  OnBoarder,
-  useOnBoarder,
-  type OnBoarderProviderProps,
-  type Step,
+export { OnBoarder, useOnBoarder } from "./components/OnBoarder";
+export type {
+  ButtonProps,
+  ContentProps,
+  ControlsProps,
+  RootProps,
+  StepProps,
+  TitleProps,
 } from "./components/OnBoarder";
 
 export { usePosition } from "./hooks/usePosition";

@@ -1,43 +1,46 @@
+import { Slot } from "@radix-ui/react-slot";
 import React, { createContext, useCallback, useContext } from "react";
 
 /* -------------------------------------------------------------------------------------------------
  * Types
  * -----------------------------------------------------------------------------------------------*/
 
-interface Step {
-  target: string;
-  content: React.ReactNode;
-  position?: "top" | "right" | "bottom" | "left" | "center";
-}
-
-interface OnBoarderState {
-  steps: Step[];
+interface OnBoarderContextValue {
   currentStepIndex: number;
   isOpen: boolean;
-}
-
-interface OnBoarderContextValue extends OnBoarderState {
   next: () => void;
   prev: () => void;
-  start: (steps: Step[]) => void;
   stop: () => void;
   isFirstStep: boolean;
   isLastStep: boolean;
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
-  components?: {
-    Root?: React.ComponentType<RootProps>;
-    Content?: React.ComponentType<ContainerProps>;
-    Buttons?: React.ComponentType<ContainerProps>;
-    Next?: React.ComponentType<ButtonProps>;
-    Prev?: React.ComponentType<ButtonProps>;
-    Close?: React.ComponentType<ButtonProps>;
-  };
 }
 
-interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface StepProps {
   children: React.ReactNode;
-  className?: string;
+  selector: string;
+  asChild?: boolean;
+}
+
+interface TitleProps {
+  children: React.ReactNode;
+  asChild?: boolean;
+}
+
+interface ContentProps {
+  children: React.ReactNode;
+  asChild?: boolean;
+}
+
+interface ControlsProps {
+  children: React.ReactNode;
+  asChild?: boolean;
+}
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: React.ReactNode;
+  asChild?: boolean;
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -49,7 +52,7 @@ const OnBoarderContext = createContext<OnBoarderContextValue | null>(null);
 const useOnBoarder = () => {
   const context = useContext(OnBoarderContext);
   if (!context) {
-    throw new Error("useOnBoarder must be used within an OnBoarder.Provider");
+    throw new Error("useOnBoarder must be used within an OnBoarder.Root");
   }
   return context;
 };
@@ -58,295 +61,217 @@ const useOnBoarder = () => {
  * Components
  * -----------------------------------------------------------------------------------------------*/
 
-interface ProviderProps {
+interface RootProps {
   children: React.ReactNode;
-  initialSteps?: Step[];
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
   closeOnOutsideClick?: boolean;
   closeOnEscape?: boolean;
-  components?: {
-    Root?: React.ComponentType<RootProps>;
-    Content?: React.ComponentType<ContainerProps>;
-    Buttons?: React.ComponentType<ContainerProps>;
-    Next?: React.ComponentType<ButtonProps>;
-    Prev?: React.ComponentType<ButtonProps>;
-    Close?: React.ComponentType<ButtonProps>;
-  };
 }
 
-const Provider = ({
-  children,
-  initialSteps = [],
-  onStepChange,
-  onComplete,
-  closeOnOutsideClick = true,
-  closeOnEscape = true,
-  components,
-}: ProviderProps) => {
-  const [state, setState] = React.useState<OnBoarderState>({
-    steps: initialSteps,
-    currentStepIndex: 0,
-    isOpen: false,
-  });
-
-  const next = useCallback(() => {
-    setState((prev) => {
-      const nextIndex = Math.min(
-        prev.currentStepIndex + 1,
-        prev.steps.length - 1
-      );
-      const isLastStep = nextIndex === prev.steps.length - 1;
-
-      if (isLastStep && onComplete) {
-        onComplete();
-      }
-
-      onStepChange?.(nextIndex);
-
-      return {
-        ...prev,
-        currentStepIndex: nextIndex,
-      };
-    });
-  }, [onStepChange, onComplete]);
-
-  const prev = useCallback(() => {
-    setState((prev) => {
-      const prevIndex = Math.max(prev.currentStepIndex - 1, 0);
-      onStepChange?.(prevIndex);
-      return {
-        ...prev,
-        currentStepIndex: prevIndex,
-      };
-    });
-  }, [onStepChange]);
-
-  const start = useCallback((steps: Step[]) => {
-    setState({
-      steps,
+const Root = React.forwardRef<HTMLDivElement, RootProps>(
+  (
+    {
+      children,
+      onStepChange,
+      onComplete,
+      closeOnOutsideClick = true,
+      closeOnEscape = true,
+    },
+    forwardedRef
+  ) => {
+    const [state, setState] = React.useState({
       currentStepIndex: 0,
-      isOpen: true,
-    });
-  }, []);
-
-  const stop = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
       isOpen: false,
-    }));
-  }, []);
+    });
 
-  React.useEffect(() => {
-    if (closeOnEscape) {
-      const handleEscape = (event: KeyboardEvent) => {
-        if (event.key === "Escape" && state.isOpen) {
-          stop();
-        }
-      };
-      document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
-    }
-  }, [closeOnEscape, state.isOpen, stop]);
+    const next = useCallback(() => {
+      setState((prev) => {
+        const nextIndex = prev.currentStepIndex + 1;
+        onStepChange?.(nextIndex);
+        return {
+          ...prev,
+          currentStepIndex: nextIndex,
+        };
+      });
+    }, [onStepChange]);
 
-  React.useEffect(() => {
-    if (closeOnOutsideClick) {
-      const handleOutsideClick = (event: MouseEvent) => {
-        if (
-          state.isOpen &&
-          !(event.target as Element).closest("[data-onboarder]")
-        ) {
-          stop();
-        }
-      };
-      document.addEventListener("click", handleOutsideClick);
-      return () => document.removeEventListener("click", handleOutsideClick);
-    }
-  }, [closeOnOutsideClick, state.isOpen, stop]);
+    const prev = useCallback(() => {
+      setState((prev) => {
+        const prevIndex = Math.max(prev.currentStepIndex - 1, 0);
+        onStepChange?.(prevIndex);
+        return {
+          ...prev,
+          currentStepIndex: prevIndex,
+        };
+      });
+    }, [onStepChange]);
 
-  const value = {
-    ...state,
-    next,
-    prev,
-    start,
-    stop,
-    isFirstStep: state.currentStepIndex === 0,
-    isLastStep: state.currentStepIndex === state.steps.length - 1,
-    onStepChange,
-    onComplete,
-    components,
-  };
+    const stop = useCallback(() => {
+      setState((prev) => ({
+        ...prev,
+        isOpen: false,
+      }));
+    }, []);
 
-  return (
-    <OnBoarderContext.Provider value={value}>
-      {children}
-    </OnBoarderContext.Provider>
-  );
-};
+    const value = {
+      ...state,
+      next,
+      prev,
+      stop,
+      isFirstStep: state.currentStepIndex === 0,
+      isLastStep: false, // Will be computed based on number of steps
+      onStepChange,
+      onComplete,
+    };
 
-interface RootProps {
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-}
+    return (
+      <OnBoarderContext.Provider value={value}>
+        <div ref={forwardedRef} data-onboarder>
+          {children}
+        </div>
+      </OnBoarderContext.Provider>
+    );
+  }
+);
 
-const DefaultRoot = ({ children, className, style }: RootProps) => {
-  return (
-    <div data-onboarder className={className} style={style}>
-      {children}
-    </div>
-  );
-};
+Root.displayName = "OnBoarder.Root";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: React.ReactNode;
-  className?: string;
-}
+const Step = React.forwardRef<HTMLDivElement, StepProps>(
+  ({ children, selector, asChild = false }, forwardedRef) => {
+    const Component = asChild ? Slot : "div";
+    return (
+      <Component
+        ref={forwardedRef}
+        data-onboarder-step
+        data-selector={selector}
+      >
+        {children}
+      </Component>
+    );
+  }
+);
 
-const DefaultNext = ({ children, className, ...props }: ButtonProps) => {
-  const { next, isLastStep } = useOnBoarder();
-  return (
-    <button
-      onClick={next}
-      data-onboarder-button
-      className={className}
-      {...props}
-    >
-      {children || (isLastStep ? "Terminer" : "Suivant")}
-    </button>
-  );
-};
+Step.displayName = "OnBoarder.Step";
 
-const DefaultPrev = ({ children, className, ...props }: ButtonProps) => {
-  const { prev, isFirstStep } = useOnBoarder();
-  return (
-    <button
-      onClick={prev}
-      disabled={isFirstStep}
-      data-onboarder-button
-      className={className}
-      {...props}
-    >
-      {children || "Précédent"}
-    </button>
-  );
-};
+const Title = React.forwardRef<HTMLHeadingElement, TitleProps>(
+  ({ children, asChild = false }, forwardedRef) => {
+    const Component = asChild ? Slot : "h3";
+    return (
+      <Component ref={forwardedRef} data-onboarder-title>
+        {children}
+      </Component>
+    );
+  }
+);
 
-const DefaultClose = ({ children, className, ...props }: ButtonProps) => {
-  const { stop } = useOnBoarder();
-  return (
-    <button
-      onClick={stop}
-      data-onboarder-button
-      className={className}
-      {...props}
-    >
-      {children || "Passer"}
-    </button>
-  );
-};
+Title.displayName = "OnBoarder.Title";
 
-const Root = ({ children, className, style }: RootProps) => {
-  const { isOpen, components } = useOnBoarder();
-  if (!isOpen) return null;
+const Content = React.forwardRef<HTMLDivElement, ContentProps>(
+  ({ children, asChild = false }, forwardedRef) => {
+    const Component = asChild ? Slot : "div";
+    return (
+      <Component ref={forwardedRef} data-onboarder-content>
+        {children}
+      </Component>
+    );
+  }
+);
 
-  const CustomRoot = components?.Root || DefaultRoot;
-  return (
-    <CustomRoot className={className} style={style}>
-      {children}
-    </CustomRoot>
-  );
-};
+Content.displayName = "OnBoarder.Content";
 
-const Next = ({ children, className, ...props }: ButtonProps) => {
-  const { components } = useOnBoarder();
-  const CustomNext = components?.Next || DefaultNext;
-  return (
-    <CustomNext className={className} {...props}>
-      {children}
-    </CustomNext>
-  );
-};
+const Controls = React.forwardRef<HTMLDivElement, ControlsProps>(
+  ({ children, asChild = false }, forwardedRef) => {
+    const Component = asChild ? Slot : "div";
+    return (
+      <Component ref={forwardedRef} data-onboarder-controls>
+        {children}
+      </Component>
+    );
+  }
+);
 
-const Prev = ({ children, className, ...props }: ButtonProps) => {
-  const { components } = useOnBoarder();
-  const CustomPrev = components?.Prev || DefaultPrev;
-  return (
-    <CustomPrev className={className} {...props}>
-      {children}
-    </CustomPrev>
-  );
-};
+Controls.displayName = "OnBoarder.Controls";
 
-const Close = ({ children, className, ...props }: ButtonProps) => {
-  const { components } = useOnBoarder();
-  const CustomClose = components?.Close || DefaultClose;
-  return (
-    <CustomClose className={className} {...props}>
-      {children}
-    </CustomClose>
-  );
-};
+const Prev = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, asChild = false, ...props }, forwardedRef) => {
+    const { prev, isFirstStep } = useOnBoarder();
+    const Component = asChild ? Slot : "button";
+    return (
+      <Component
+        ref={forwardedRef}
+        onClick={prev}
+        disabled={isFirstStep}
+        data-onboarder-prev
+        {...props}
+      >
+        {children || "Précédent"}
+      </Component>
+    );
+  }
+);
 
-const DefaultContent = ({ children, className, ...props }: ContainerProps) => {
-  return (
-    <div data-onboarder-content className={className} {...props}>
-      {children}
-    </div>
-  );
-};
+Prev.displayName = "OnBoarder.Prev";
 
-const DefaultButtons = ({ children, className, ...props }: ContainerProps) => {
-  return (
-    <div data-onboarder-buttons className={className} {...props}>
-      {children}
-    </div>
-  );
-};
+const Next = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, asChild = false, ...props }, forwardedRef) => {
+    const { next, isLastStep } = useOnBoarder();
+    const Component = asChild ? Slot : "button";
+    return (
+      <Component
+        ref={forwardedRef}
+        onClick={next}
+        data-onboarder-next
+        {...props}
+      >
+        {children || (isLastStep ? "Terminer" : "Suivant")}
+      </Component>
+    );
+  }
+);
 
-const Content = ({ children, className, ...props }: ContainerProps) => {
-  const { isOpen, components } = useOnBoarder();
-  if (!isOpen) return null;
+Next.displayName = "OnBoarder.Next";
 
-  const CustomContent = components?.Content || DefaultContent;
-  return (
-    <CustomContent className={className} {...props}>
-      {children}
-    </CustomContent>
-  );
-};
+const Skip = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, asChild = false, ...props }, forwardedRef) => {
+    const { stop } = useOnBoarder();
+    const Component = asChild ? Slot : "button";
+    return (
+      <Component
+        ref={forwardedRef}
+        onClick={stop}
+        data-onboarder-skip
+        {...props}
+      >
+        {children || "Passer"}
+      </Component>
+    );
+  }
+);
 
-const Buttons = ({ children, className, ...props }: ContainerProps) => {
-  const { isOpen, components } = useOnBoarder();
-  if (!isOpen) return null;
-
-  const CustomButtons = components?.Buttons || DefaultButtons;
-  return (
-    <CustomButtons className={className} {...props}>
-      {children}
-    </CustomButtons>
-  );
-};
+Skip.displayName = "OnBoarder.Skip";
 
 /* -------------------------------------------------------------------------------------------------
  * OnBoarder Namespace
  * -----------------------------------------------------------------------------------------------*/
 
 export const OnBoarder = {
-  Provider,
   Root,
+  Step,
+  Title,
   Content,
-  Buttons,
-  Next,
+  Controls,
   Prev,
-  Close,
+  Next,
+  Skip,
 };
 
 export { useOnBoarder };
 export type {
   ButtonProps,
-  ContainerProps,
-  ProviderProps as OnBoarderProviderProps,
+  ContentProps,
+  ControlsProps,
   RootProps,
-  Step,
+  StepProps,
+  TitleProps,
 };
