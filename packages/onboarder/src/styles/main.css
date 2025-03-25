@@ -1,0 +1,96 @@
+@layer components {
+  .tour-tooltip {
+    @apply animate-fade-in;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Tooltip principal */
+.tour-tooltip {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.dark .tour-tooltip {
+  background: rgba(31, 41, 55, 0.95);
+  border-color: rgba(75, 85, 99, 0.5);
+}
+
+.tour-content {
+  @apply text-base leading-relaxed text-gray-800 dark:text-gray-200;
+  margin-bottom: 1.5rem;
+}
+
+/* Styles des boutons */
+.tour-button {
+  @apply px-4 py-2 font-medium rounded-lg transition-all duration-200 transform hover:scale-105;
+}
+
+.tour-button-primary {
+  @apply text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:scale-95;
+}
+
+.tour-button-secondary {
+  @apply text-gray-700 bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 active:scale-95;
+}
+
+.tour-button-danger {
+  @apply text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 active:scale-95;
+}
+
+/* Flèche indicatrice de position */
+.tour-tooltip::before {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: inherit;
+  border: inherit;
+  border-width: 1px;
+  transform: rotate(45deg);
+}
+
+.tour-tooltip[data-position="top"]::before {
+  bottom: -6px;
+  left: 50%;
+  margin-left: -6px;
+  border-top: 0;
+  border-left: 0;
+}
+
+.tour-tooltip[data-position="bottom"]::before {
+  top: -6px;
+  left: 50%;
+  margin-left: -6px;
+  border-bottom: 0;
+  border-right: 0;
+}
+
+.tour-tooltip[data-position="left"]::before {
+  right: -6px;
+  top: 50%;
+  margin-top: -6px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.tour-tooltip[data-position="right"]::before {
+  left: -6px;
+  top: 50%;
+  margin-top: -6px;
+  border-left: 0;
+  border-top: 0;
+}
