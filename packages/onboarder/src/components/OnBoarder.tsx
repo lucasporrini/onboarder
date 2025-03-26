@@ -126,6 +126,7 @@ const Root = ({ children, onStepChange, onComplete }: RootProps) => {
 
   const value: OnBoarderContextValue = {
     ...state,
+    totalSteps: state.steps.length,
     next,
     prev,
     stop,
