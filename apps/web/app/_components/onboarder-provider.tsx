@@ -1,90 +1,78 @@
 "use client";
 
-import {
-  OnBoarder,
-  OnBoarderProvider,
-  useOnBoarderProvider,
-  usePosition,
-} from "onboarder";
-import { useEffect } from "react";
+import { Button } from "@repo/ui/button";
+import { OnBoarder, OnBoarderProvider } from "onboarder";
 
-interface OnboardingProviderProps {
-  children: React.ReactNode;
-  onStepChange?: (index: number) => void;
-  onComplete?: () => void;
-}
-
-interface StepWrapperProps {
-  selector: string;
-  children: React.ReactNode;
-}
-
-const StepWrapper = ({ selector, children }: StepWrapperProps) => {
-  const position = usePosition({
-    target: selector,
-    title: "",
-    content: "",
-  });
-
+export const OnBoarderComp = () => {
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: position.top,
-        left: position.left,
-        transform: position.transform,
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-const OnboardingContent = ({
-  children,
-  onStepChange,
-  onComplete,
-}: OnboardingProviderProps) => {
-  const { start } = useOnBoarderProvider();
-
-  useEffect(() => {
-    start();
-  }, [start]);
-
-  return (
-    <OnBoarder.Root onStepChange={onStepChange} onComplete={onComplete}>
-      <StepWrapper selector="#mon-selector">
-        <OnBoarder.Step selector="#mon-selector">
-          <OnBoarder.Title>Bienvenue !</OnBoarder.Title>
+    <OnBoarderProvider>
+      <OnBoarder.Root>
+        <OnBoarder.Step
+          selector="#mon-selector"
+          placement="top"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+        >
+          <OnBoarder.Title className="text-2xl font-bold">
+            Bienvenue !
+          </OnBoarder.Title>
           <OnBoarder.Content>
             Ceci est la première étape de votre onboarding.
           </OnBoarder.Content>
+          <OnBoarder.Controls className="flex items-center justify-end gap-2">
+            <OnBoarder.Prev asChild>
+              <Button className="py-1 px-2 rounded-md cursor-pointer">
+                Précédent
+              </Button>
+            </OnBoarder.Prev>
+            <OnBoarder.Next asChild>
+              <Button className="py-1 px-2 rounded-md cursor-pointer">
+                Suivant
+              </Button>
+            </OnBoarder.Next>
+            <OnBoarder.Finish asChild>
+              <Button className="py-1 px-2 rounded-md cursor-pointer">
+                Terminer
+              </Button>
+            </OnBoarder.Finish>
+          </OnBoarder.Controls>
         </OnBoarder.Step>
-      </StepWrapper>
 
-      <StepWrapper selector=".profile-section">
-        <OnBoarder.Step selector=".profile-section">
-          <OnBoarder.Title>Votre profil</OnBoarder.Title>
+        <OnBoarder.Step
+          selector="#mon-selector-2"
+          placement="bottom"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+        >
+          <OnBoarder.Title className="text-2xl font-bold">
+            Votre profil
+          </OnBoarder.Title>
           <OnBoarder.Content>
             Ici vous pouvez gérer vos informations personnelles.
           </OnBoarder.Content>
+          <OnBoarder.Controls className="flex items-center justify-end gap-2">
+            <OnBoarder.Prev asChild>
+              <Button className="py-1 px-2 rounded-md cursor-pointer">
+                Précédent
+              </Button>
+            </OnBoarder.Prev>
+            <OnBoarder.Next asChild>
+              <Button className="py-1 px-2 rounded-md cursor-pointer">
+                Suivant
+              </Button>
+            </OnBoarder.Next>
+            <OnBoarder.Finish asChild>
+              <Button className="py-1 px-2 rounded-md cursor-pointer">
+                Terminer
+              </Button>
+            </OnBoarder.Finish>
+          </OnBoarder.Controls>
         </OnBoarder.Step>
-      </StepWrapper>
 
-      <OnBoarder.Controls>
-        <OnBoarder.Prev />
-        <OnBoarder.Next />
-        <OnBoarder.Skip />
-      </OnBoarder.Controls>
-      {children}
-    </OnBoarder.Root>
-  );
-};
-
-export const OnboardingProvider = (props: OnboardingProviderProps) => {
-  return (
-    <OnBoarderProvider>
-      <OnboardingContent {...props} />
+        {/* <OnBoarder.Controls>
+          <OnBoarder.Prev>Précédent</OnBoarder.Prev>
+          <OnBoarder.Next>Suivant</OnBoarder.Next>
+          <OnBoarder.Finish>Terminer</OnBoarder.Finish>
+        </OnBoarder.Controls> */}
+      </OnBoarder.Root>
     </OnBoarderProvider>
   );
 };

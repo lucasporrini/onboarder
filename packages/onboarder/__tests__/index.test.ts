@@ -23,7 +23,7 @@ describe("Onboarder exports", () => {
     expect(typeof step).toBe("object");
 
     const mockTourContext: OnBoarderContextValue = {
-      currentStep: null,
+      steps: [],
       currentStepIndex: 0,
       isOpen: false,
       next: () => {},

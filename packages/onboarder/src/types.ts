@@ -22,7 +22,9 @@ export type Position = {
 
 export interface OnBoarderContextValue {
   currentStepIndex: number;
+  totalSteps: number;
   isOpen: boolean;
+  steps: Step[];
   next: () => void;
   prev: () => void;
   stop: () => void;
@@ -30,27 +32,39 @@ export interface OnBoarderContextValue {
   isLastStep: boolean;
   onStepChange?: (index: number) => void;
   onComplete?: () => void;
-  currentStep: Step | null;
-  position: Position;
+  currentStep?: Step;
+  position: {
+    top: number;
+    left: number;
+    transform: string;
+  };
 }
 
-export interface StepProps {
+export interface StepProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   selector: string;
   asChild?: boolean;
+  placement?: "top" | "bottom" | "left" | "right" | "center";
+  offset?: number;
+  highlight?: boolean;
+  highlightColor?: string;
+  highlightBorderRadius?: string;
+  isModal?: boolean;
+  beforeEnter?: () => void | Promise<void>;
+  afterExit?: () => void | Promise<void>;
 }
 
-export interface TitleProps {
+export interface TitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   children: ReactNode;
   asChild?: boolean;
 }
 
-export interface ContentProps {
+export interface ContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   asChild?: boolean;
 }
 
-export interface ControlsProps {
+export interface ControlsProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   asChild?: boolean;
 }

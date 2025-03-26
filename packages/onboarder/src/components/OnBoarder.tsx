@@ -67,8 +67,14 @@ const Root = ({ children, onStepChange, onComplete }: RootProps) => {
           target: stepChild.props.selector,
           title: typeof title === "string" ? title : "",
           content: content || "",
-          placement: "bottom" as const,
-          highlight: true,
+          placement: stepChild.props.placement || "bottom",
+          offset: stepChild.props.offset,
+          highlight: stepChild.props.highlight,
+          highlightColor: stepChild.props.highlightColor,
+          highlightBorderRadius: stepChild.props.highlightBorderRadius,
+          isModal: stepChild.props.isModal,
+          beforeEnter: stepChild.props.beforeEnter,
+          afterExit: stepChild.props.afterExit,
         };
       });
 
@@ -133,14 +139,18 @@ const Root = ({ children, onStepChange, onComplete }: RootProps) => {
 
   return (
     <OnBoarderContext.Provider value={value}>
-      <div data-onboarder style={{ position: "relative" }}>
-        {children}
-      </div>
+      {children}
     </OnBoarderContext.Provider>
   );
 };
 
-const Step = ({ children, selector, asChild = false }: StepProps) => {
+const Step = ({
+  children,
+  selector,
+  asChild = false,
+  style,
+  ...props
+}: StepProps) => {
   const { currentStep, position, isOpen } = useOnBoarder();
   const Component = asChild ? Slot : "div";
   const isActive = currentStep?.target === selector;
@@ -148,42 +158,78 @@ const Step = ({ children, selector, asChild = false }: StepProps) => {
   if (!isOpen || !isActive) return null;
 
   return (
-    <Component
-      data-onboarder-step
-      data-selector={selector}
+    <div
       style={{
         position: "fixed",
-        top: position.top,
-        left: position.left,
-        transform: position.transform,
-        zIndex: 1000,
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 9999,
       }}
     >
+      <Component
+        data-onboarder-step
+        data-selector={selector}
+        style={{
+          position: "absolute",
+          top: position.top,
+          left: position.left,
+          transform: position.transform,
+          pointerEvents: "auto",
+          ...style,
+        }}
+        {...props}
+      >
+        {children}
+      </Component>
+    </div>
+  );
+};
+
+const Title = ({ children, asChild = false, style, ...props }: TitleProps) => {
+  const Component = asChild ? Slot : "h3";
+  return (
+    <Component data-onboarder-title style={style} {...props}>
       {children}
     </Component>
   );
 };
 
-const Title = ({ children, asChild = false }: TitleProps) => {
-  const Component = asChild ? Slot : "h3";
-  return <Component data-onboarder-title>{children}</Component>;
-};
-
-const Content = ({ children, asChild = false }: ContentProps) => {
+const Content = ({
+  children,
+  asChild = false,
+  style,
+  ...props
+}: ContentProps) => {
   const Component = asChild ? Slot : "div";
-  return <Component data-onboarder-content>{children}</Component>;
+  return (
+    <Component data-onboarder-content style={style} {...props}>
+      {children}
+    </Component>
+  );
 };
 
-const Controls = ({ children, asChild = false }: ControlsProps) => {
+const Controls = ({
+  children,
+  asChild = false,
+  style,
+  ...props
+}: ControlsProps) => {
   const { isOpen } = useOnBoarder();
   const Component = asChild ? Slot : "div";
 
   if (!isOpen) return null;
 
-  return <Component data-onboarder-controls>{children}</Component>;
+  return (
+    <Component data-onboarder-controls style={style} {...props}>
+      {children}
+    </Component>
+  );
 };
 
-const Prev = ({ children, asChild = false, ...props }: ButtonProps) => {
+const Prev = ({ children, asChild = false, style, ...props }: ButtonProps) => {
   const { prev, isFirstStep } = useOnBoarder();
   const Component = asChild ? Slot : "button";
   return (
@@ -191,6 +237,7 @@ const Prev = ({ children, asChild = false, ...props }: ButtonProps) => {
       onClick={prev}
       disabled={isFirstStep}
       data-onboarder-prev
+      style={style}
       {...props}
     >
       {children || "Précédent"}
@@ -198,39 +245,42 @@ const Prev = ({ children, asChild = false, ...props }: ButtonProps) => {
   );
 };
 
-const Next = ({ children, asChild = false, ...props }: ButtonProps) => {
+const Next = ({ children, asChild = false, style, ...props }: ButtonProps) => {
   const { next, isLastStep } = useOnBoarder();
   const Component = asChild ? Slot : "button";
 
-  // Ne pas afficher le bouton Next au dernier step
   if (isLastStep) return null;
 
   return (
-    <Component onClick={next} data-onboarder-next {...props}>
+    <Component onClick={next} data-onboarder-next style={style} {...props}>
       {children || "Suivant"}
     </Component>
   );
 };
 
-const Skip = ({ children, asChild = false, ...props }: ButtonProps) => {
+const Skip = ({ children, asChild = false, style, ...props }: ButtonProps) => {
   const { stop } = useOnBoarder();
   const Component = asChild ? Slot : "button";
   return (
-    <Component onClick={stop} data-onboarder-skip {...props}>
+    <Component onClick={stop} data-onboarder-skip style={style} {...props}>
       {children || "Passer"}
     </Component>
   );
 };
 
-const Finish = ({ children, asChild = false, ...props }: ButtonProps) => {
+const Finish = ({
+  children,
+  asChild = false,
+  style,
+  ...props
+}: ButtonProps) => {
   const { next, isLastStep } = useOnBoarder();
   const Component = asChild ? Slot : "button";
 
-  // N'afficher le bouton Finish que au dernier step
   if (!isLastStep) return null;
 
   return (
-    <Component onClick={next} data-onboarder-finish {...props}>
+    <Component onClick={next} data-onboarder-finish style={style} {...props}>
       {children || "Terminer"}
     </Component>
   );

@@ -20,25 +20,26 @@ export const usePosition = (step: Step | undefined) => {
       if (target) {
         const rect = target.getBoundingClientRect();
         const placement = step.placement || "bottom";
+        const offset = step.offset || 10;
 
-        let top = rect.bottom + 10;
+        let top = rect.bottom + offset;
         let left = rect.left + rect.width / 2;
         let transform = "translate(-50%, 0)";
 
         switch (placement) {
           case "top":
-            top = rect.top - 10;
+            top = rect.top - offset;
             left = rect.left + rect.width / 2;
             transform = "translate(-50%, -100%)";
             break;
           case "right":
             top = rect.top + rect.height / 2;
-            left = rect.right + 10;
+            left = rect.right + offset;
             transform = "translate(0, -50%)";
             break;
           case "left":
             top = rect.top + rect.height / 2;
-            left = rect.left - 10;
+            left = rect.left - offset;
             transform = "translate(-100%, -50%)";
             break;
           case "center":
