@@ -9,7 +9,7 @@ const StepContent = () => {
 
   return (
     <>
-      <OnBoarder.Title className="text-2xl font-bold">
+      <OnBoarder.Title className="text-xl font-bold">
         Étape {currentStepIndex + 1} sur {totalSteps}
       </OnBoarder.Title>
       <OnBoarder.Content>
@@ -17,7 +17,7 @@ const StepContent = () => {
         {!isFirstStep && !isLastStep && "Continuons avec la découverte..."}
         {isLastStep && "Vous avez terminé le guide !"}
       </OnBoarder.Content>
-      <OnBoarder.Controls className="flex items-center justify-end gap-2">
+      <OnBoarder.Controls className="flex items-center justify-end gap-2 mt-4">
         {currentStepIndex > 0 && (
           <OnBoarder.Prev asChild>
             <Button className="py-1 px-2 rounded-md cursor-pointer">
