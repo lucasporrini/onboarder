@@ -1,13 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  ReactElement,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
-import { Step } from "../types";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { OnBoarder } from "./OnBoarder";
 
 interface OnBoarderProviderContextValue {
@@ -35,23 +28,6 @@ interface OnBoarderProviderProps {
   onComplete?: () => void;
 }
 
-interface RootChildProps {
-  children: React.ReactNode;
-}
-
-interface StepChildProps {
-  selector: string;
-  children: React.ReactNode;
-}
-
-interface TitleChildProps {
-  children: React.ReactNode;
-}
-
-interface ContentChildProps {
-  children: React.ReactNode;
-}
-
 export const OnBoarderProvider = ({
   children,
   onStepChange,
@@ -66,42 +42,6 @@ export const OnBoarderProvider = ({
   const stop = useCallback(() => {
     setIsOpen(false);
   }, []);
-
-  // Extract steps from children
-  const steps: Step[] = React.Children.toArray(children)
-    .filter(
-      (child): child is ReactElement<RootChildProps> =>
-        React.isValidElement(child) && child.type === OnBoarder.Root
-    )
-    .map((child) => {
-      return React.Children.toArray(child.props.children)
-        .filter(
-          (stepChild): stepChild is ReactElement<StepChildProps> =>
-            React.isValidElement(stepChild) && stepChild.type === OnBoarder.Step
-        )
-        .map((stepChild) => {
-          const title = React.Children.toArray(stepChild.props.children).find(
-            (titleChild): titleChild is ReactElement<TitleChildProps> =>
-              React.isValidElement(titleChild) &&
-              titleChild.type === OnBoarder.Title
-          )?.props.children;
-
-          const content = React.Children.toArray(stepChild.props.children).find(
-            (contentChild): contentChild is ReactElement<ContentChildProps> =>
-              React.isValidElement(contentChild) &&
-              contentChild.type === OnBoarder.Content
-          )?.props.children;
-
-          return {
-            target: stepChild.props.selector,
-            title: typeof title === "string" ? title : "",
-            content: content || "",
-            placement: "bottom" as const,
-            highlight: true,
-          };
-        });
-    })
-    .flat();
 
   return (
     <OnBoarderProviderContext.Provider value={{ start, stop, isOpen }}>
