@@ -2,15 +2,17 @@ import { StarsBackground } from "@repo/ui/stars-background";
 import { Buttons } from "../_components/buttons";
 import { CodeEditor } from "../_components/code-editor";
 import { Logo } from "../_components/logo";
+import { OnBoarderComp } from "../_components/onboarder-provider";
 import { Socials } from "../_components/socials";
 
 export default function HomePage() {
   return (
     <main className="relative min-h-screen">
+      <OnBoarderComp />
       <div className="fixed top-0 left-0 w-full z-10 px-32 py-16 flex items-center justify-between">
         <div className="flex items-baseline gap-0">
           <Logo width={20} height={20} />
-          <h1 className="text-2xl font-bold">nboarder</h1>
+          <h1 className="text-2xl font-medium">nboarder</h1>
         </div>
         <Socials />
       </div>

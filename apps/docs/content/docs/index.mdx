@@ -1,13 +1,71 @@
 ---
-title: Hello World
-description: Your first document
+title: Onboarder
+description: A composable React library for creating fluid onboarding experiences
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+# Onboarder
 
-## What is Next?
+Onboarder is a composable React library for creating fluid and customizable onboarding experiences. It uses a component-based approach for better flexibility and customization.
+
+## Features
+
+- 🎯 Composable and intuitive API
+- 🎨 Full customization through components
+- 🔄 Smooth animations with Framer Motion
+- 📱 Responsive design
+- 🎮 Built-in keyboard navigation
+- 🔍 Keyboard shortcuts support
+- 🎭 Customizable themes
+- 🎨 Tailwind CSS integration
+
+## Installation
+
+```bash
+npm install onboarder
+# or
+yarn add onboarder
+# or
+pnpm add onboarder
+```
+
+## Quick Start
+
+```tsx
+import { OnBoarder, OnBoarderProvider } from "onboarder";
+
+function App() {
+  return (
+    <OnBoarderProvider>
+      <OnBoarder.Root>
+        <OnBoarder.Step
+          selector="#welcome"
+          placement="top"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+        >
+          <OnBoarder.Title>Welcome!</OnBoarder.Title>
+          <OnBoarder.Content>
+            Let's start discovering our application.
+          </OnBoarder.Content>
+          <OnBoarder.Controls>
+            <OnBoarder.Next>Next</OnBoarder.Next>
+            <OnBoarder.Finish>Finish</OnBoarder.Finish>
+          </OnBoarder.Controls>
+        </OnBoarder.Step>
+      </OnBoarder.Root>
+    </OnBoarderProvider>
+  );
+}
+```
+
+## Examples
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.vercel.app" />
+  <Card title="Getting Started" href="/docs/getting-started" />
+  <Card title="Components" href="/docs/components" />
+  <Card title="Customization" href="/docs/customization" />
+  <Card title="Examples" href="/docs/examples" />
 </Cards>
+
+## Get Started
+
+Check out our [getting started guide](/docs/getting-started) to begin using Onboarder in your application.

@@ -1,0 +1,88 @@
+---
+title: Composants
+description: Documentation des composants Onboarder
+---
+
+# Composants
+
+## Onboarder
+
+Le composant principal qui gère l'expérience d'onboarding.
+
+### Props
+
+| Prop         | Type         | Description                                            |
+| ------------ | ------------ | ------------------------------------------------------ |
+| `steps`      | `Step[]`     | Tableau des étapes d'onboarding                        |
+| `onComplete` | `() => void` | Callback appelé à la fin de l'onboarding               |
+| `onSkip`     | `() => void` | Callback appelé quand l'utilisateur saute l'onboarding |
+| `styles`     | `Styles`     | Styles personnalisés pour les différents éléments      |
+| `animations` | `Animations` | Animations personnalisées                              |
+
+### Exemple
+
+```tsx
+<Onboarder
+  steps={[
+    {
+      target: "#welcome",
+      content: "Bienvenue!",
+      placement: "bottom",
+    },
+  ]}
+  onComplete={() => console.log("Terminé!")}
+/>
+```
+
+## Step
+
+Interface définissant une étape d'onboarding.
+
+### Type
+
+```tsx
+interface Step {
+  target: string; // Sélecteur CSS de l'élément cible
+  content: string; // Contenu de l'étape
+  placement?: "top" | "bottom" | "left" | "right"; // Position du tooltip
+  title?: string; // Titre optionnel
+  disableBeacon?: boolean; // Désactive le point de repère
+  spotlightClicks?: boolean; // Permet les clics dans la zone de spotlight
+}
+```
+
+## Styles
+
+Interface pour personnaliser les styles.
+
+### Type
+
+```tsx
+interface Styles {
+  tooltip?: React.CSSProperties;
+  button?: React.CSSProperties;
+  spotlight?: React.CSSProperties;
+  beacon?: React.CSSProperties;
+}
+```
+
+## Animations
+
+Interface pour personnaliser les animations.
+
+### Type
+
+```tsx
+interface Animations {
+  tooltip?: {
+    enter: object;
+    enterActive: object;
+    exit: object;
+  };
+  spotlight?: {
+    enter: object;
+    enterActive: object;
+    exit: object;
+  };
+}
+```

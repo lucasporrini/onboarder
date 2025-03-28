@@ -1,12 +1,28 @@
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import type { ReactNode } from 'react';
-import { baseOptions } from '@/app/layout.config';
-import { source } from '@/lib/source';
+import { baseOptions } from "@/app/layout.config";
+import { source } from "@/lib/source";
+import { DocsLayout, DocsLayoutProps } from "fumadocs-ui/layouts/docs";
+import type { ReactNode } from "react";
+
+const docsOptions: DocsLayoutProps = {
+  ...baseOptions,
+  tree: source.pageTree,
+  links: [],
+  sidebar: {
+    tabs: [
+      {
+        title: "Test",
+        description: "Test Tab",
+        url: "/docs",
+      },
+      {
+        title: "Test 2",
+        description: "Test Tab 2",
+        url: "/docs/test",
+      },
+    ],
+  },
+};
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return (
-    <DocsLayout tree={source.pageTree} {...baseOptions}>
-      {children}
-    </DocsLayout>
-  );
+  return <DocsLayout {...docsOptions}>{children}</DocsLayout>;
 }

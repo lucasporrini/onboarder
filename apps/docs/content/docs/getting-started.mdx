@@ -1,0 +1,135 @@
+---
+title: Getting Started
+description: Start using Onboarder in your application
+---
+
+# Getting Started
+
+This guide will help you integrate Onboarder into your React application using its composable API.
+
+## Prerequisites
+
+- React 18 or higher
+- TypeScript (recommended)
+- Tailwind CSS (optional, for styling)
+
+## Installation
+
+```bash
+npm install onboarder
+```
+
+## Basic Setup
+
+1. Import the necessary components:
+
+```tsx
+import { OnBoarder, OnBoarderProvider } from "onboarder";
+```
+
+2. Create your first onboarding:
+
+```tsx
+function App() {
+  return (
+    <OnBoarderProvider>
+      <OnBoarder.Root>
+        <OnBoarder.Step
+          selector="#welcome"
+          placement="top"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+        >
+          <OnBoarder.Title>Welcome!</OnBoarder.Title>
+          <OnBoarder.Content>
+            Let's start discovering our application.
+          </OnBoarder.Content>
+          <OnBoarder.Controls>
+            <OnBoarder.Next>Next</OnBoarder.Next>
+            <OnBoarder.Finish>Finish</OnBoarder.Finish>
+          </OnBoarder.Controls>
+        </OnBoarder.Step>
+      </OnBoarder.Root>
+    </OnBoarderProvider>
+  );
+}
+```
+
+## Available Components
+
+### OnBoarderProvider
+
+The main provider that manages the onboarding state.
+
+### OnBoarder.Root
+
+The main container for onboarding steps.
+
+### OnBoarder.Step
+
+Defines an onboarding step with:
+
+- `selector`: The CSS selector of the target element
+- `placement`: The tooltip position ("top", "bottom", "left", "right")
+- `className`: CSS classes for styling
+
+### OnBoarder.Title
+
+The step title.
+
+### OnBoarder.Content
+
+The main content of the step.
+
+### OnBoarder.Controls
+
+Navigation controls.
+
+### OnBoarder.Next
+
+Button to move to the next step.
+
+### OnBoarder.Prev
+
+Button to go back to the previous step.
+
+### OnBoarder.Finish
+
+Button to finish the onboarding.
+
+## Using the useOnBoarder Hook
+
+The `useOnBoarder` hook gives you access to the onboarding state:
+
+```tsx
+function StepContent() {
+  const { currentStepIndex, totalSteps, isFirstStep, isLastStep } =
+    useOnBoarder();
+
+  return (
+    <>
+      <OnBoarder.Title>
+        Step {currentStepIndex + 1} of {totalSteps}
+      </OnBoarder.Title>
+      <OnBoarder.Content>
+        {isFirstStep && "Welcome to our usage guide!"}
+        {!isFirstStep && !isLastStep && "Let's continue exploring..."}
+        {isLastStep && "You've completed the guide!"}
+      </OnBoarder.Content>
+    </>
+  );
+}
+```
+
+## Best Practices
+
+1. **Structure**: Organize your steps logically
+2. **Content**: Keep messages short and clear
+3. **Navigation**: Ensure navigation is intuitive
+4. **Accessibility**: Use appropriate CSS selectors
+5. **Style**: Customize appearance to match your design
+
+## Next Steps
+
+- Check out the [components documentation](/docs/components)
+- Explore the [examples](/docs/examples)
+- Learn about [customization options](/docs/customization)

@@ -1,0 +1,179 @@
+---
+title: Examples
+description: Onboarder usage examples
+---
+
+# Examples
+
+## Simple Onboarding
+
+A basic example with two steps.
+
+```tsx
+import { OnBoarder, OnBoarderProvider } from "onboarder";
+
+function SimpleOnboarding() {
+  return (
+    <OnBoarderProvider>
+      <OnBoarder.Root>
+        <OnBoarder.Step
+          selector="#get-started-button"
+          placement="top"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+        >
+          <OnBoarder.Title>Welcome!</OnBoarder.Title>
+          <OnBoarder.Content>Start your experience here.</OnBoarder.Content>
+          <OnBoarder.Controls>
+            <OnBoarder.Next>Next</OnBoarder.Next>
+          </OnBoarder.Controls>
+        </OnBoarder.Step>
+
+        <OnBoarder.Step
+          selector="#copy-button"
+          placement="bottom"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+        >
+          <OnBoarder.Title>Copy Code</OnBoarder.Title>
+          <OnBoarder.Content>
+            Click here to copy the installation code.
+          </OnBoarder.Content>
+          <OnBoarder.Controls>
+            <OnBoarder.Prev>Back</OnBoarder.Prev>
+            <OnBoarder.Finish>Finish</OnBoarder.Finish>
+          </OnBoarder.Controls>
+        </OnBoarder.Step>
+      </OnBoarder.Root>
+    </OnBoarderProvider>
+  );
+}
+```
+
+## Onboarding with Progress
+
+An example showing how to display progress.
+
+```tsx
+import { OnBoarder, OnBoarderProvider, useOnBoarder } from "onboarder";
+
+function StepContent() {
+  const { currentStepIndex, totalSteps } = useOnBoarder();
+
+  return (
+    <>
+      <div className="flex items-center justify-between mb-2">
+        <OnBoarder.Title>
+          Step {currentStepIndex + 1} of {totalSteps}
+        </OnBoarder.Title>
+        <div className="flex gap-1">
+          {Array.from({ length: totalSteps }).map((_, i) => (
+            <div
+              key={i}
+              className={`w-2 h-2 rounded-full ${
+                i === currentStepIndex ? "bg-blue-500" : "bg-zinc-200"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+      <OnBoarder.Content>Step content...</OnBoarder.Content>
+      <OnBoarder.Controls className="flex items-center justify-between mt-4">
+        <OnBoarder.Prev>Back</OnBoarder.Prev>
+        <OnBoarder.Next>Next</OnBoarder.Next>
+      </OnBoarder.Controls>
+    </>
+  );
+}
+
+function ProgressOnboarding() {
+  return (
+    <OnBoarderProvider>
+      <OnBoarder.Root>
+        <OnBoarder.Step
+          selector="#step1"
+          placement="top"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+        >
+          <StepContent />
+        </OnBoarder.Step>
+        <OnBoarder.Step
+          selector="#step2"
+          placement="right"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+        >
+          <StepContent />
+        </OnBoarder.Step>
+      </OnBoarder.Root>
+    </OnBoarderProvider>
+  );
+}
+```
+
+## Dark Mode Onboarding
+
+An example of onboarding with dark mode support.
+
+```tsx
+import { OnBoarder, OnBoarderProvider } from "onboarder";
+
+function DarkModeOnboarding() {
+  return (
+    <OnBoarderProvider>
+      <OnBoarder.Root>
+        <OnBoarder.Step
+          selector="#feature"
+          placement="bottom"
+          className="min-w-[300px] rounded-md p-4 bg-white dark:bg-zinc-800 shadow-md"
+        >
+          <OnBoarder.Title className="text-xl font-bold text-zinc-900 dark:text-white">
+            New Feature
+          </OnBoarder.Title>
+          <OnBoarder.Content className="text-zinc-600 dark:text-zinc-300">
+            Discover our latest feature...
+          </OnBoarder.Content>
+          <OnBoarder.Controls className="flex items-center justify-end gap-2 mt-4">
+            <OnBoarder.Next className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+              Next
+            </OnBoarder.Next>
+          </OnBoarder.Controls>
+        </OnBoarder.Step>
+      </OnBoarder.Root>
+    </OnBoarderProvider>
+  );
+}
+```
+
+## Onboarding with Custom Animations
+
+An example with custom animations using Framer Motion.
+
+```tsx
+import { OnBoarder, OnBoarderProvider } from "onboarder";
+
+function AnimatedOnboarding() {
+  return (
+    <OnBoarderProvider>
+      <OnBoarder.Root>
+        <OnBoarder.Step
+          selector="#animated"
+          placement="left"
+          className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+          motionProps={{
+            initial: { opacity: 0, x: -20 },
+            animate: { opacity: 1, x: 0 },
+            exit: { opacity: 0, x: -20 },
+            transition: { duration: 0.3, ease: "easeOut" },
+          }}
+        >
+          <OnBoarder.Title>Custom Animation</OnBoarder.Title>
+          <OnBoarder.Content>
+            This step uses custom animations.
+          </OnBoarder.Content>
+          <OnBoarder.Controls>
+            <OnBoarder.Next>Next</OnBoarder.Next>
+          </OnBoarder.Controls>
+        </OnBoarder.Step>
+      </OnBoarder.Root>
+    </OnBoarderProvider>
+  );
+}
+```

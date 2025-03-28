@@ -1,0 +1,169 @@
+---
+title: Customization
+description: Onboarder customization guide
+---
+
+# Customization
+
+Onboarder offers several customization options to adapt the experience to your needs.
+
+## Styling with Tailwind CSS
+
+You can customize the appearance of each component using Tailwind CSS classes:
+
+```tsx
+<OnBoarder.Step
+  selector="#welcome"
+  placement="top"
+  className="min-w-[300px] rounded-md p-4 bg-white shadow-md dark:bg-zinc-800"
+>
+  <OnBoarder.Title className="text-xl font-bold text-zinc-900 dark:text-white">
+    Welcome!
+  </OnBoarder.Title>
+  <OnBoarder.Content className="text-zinc-600 dark:text-zinc-300">
+    Let's start discovering our application.
+  </OnBoarder.Content>
+  <OnBoarder.Controls className="flex items-center justify-end gap-2 mt-4">
+    <OnBoarder.Next className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+      Next
+    </OnBoarder.Next>
+  </OnBoarder.Controls>
+</OnBoarder.Step>
+```
+
+## Custom Components
+
+You can create your own components using the `useOnBoarder` hook:
+
+```tsx
+function CustomStepContent() {
+  const { currentStepIndex, totalSteps } = useOnBoarder();
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Step {currentStepIndex + 1}</h3>
+        <span className="text-sm text-zinc-500">
+          {currentStepIndex + 1} / {totalSteps}
+        </span>
+      </div>
+      <div className="prose dark:prose-invert">
+        <p>Custom step content...</p>
+      </div>
+      <div className="flex justify-end gap-2">
+        <OnBoarder.Prev>Back</OnBoarder.Prev>
+        <OnBoarder.Next>Next</OnBoarder.Next>
+      </div>
+    </div>
+  );
+}
+```
+
+## Custom Animations
+
+You can customize animations using Framer Motion:
+
+```tsx
+<OnBoarder.Step
+  selector="#welcome"
+  placement="top"
+  className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
+  motionProps={{
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 20 },
+    transition: { duration: 0.2 },
+  }}
+>
+  <StepContent />
+</OnBoarder.Step>
+```
+
+## Themes
+
+You can create custom themes for your onboarding:
+
+```tsx
+const theme = {
+  step: {
+    base: "min-w-[300px] rounded-md p-4 shadow-md",
+    light: "bg-white",
+    dark: "bg-zinc-800",
+  },
+  title: {
+    base: "text-xl font-bold",
+    light: "text-zinc-900",
+    dark: "text-white",
+  },
+  content: {
+    base: "mt-2",
+    light: "text-zinc-600",
+    dark: "text-zinc-300",
+  },
+  controls: {
+    base: "flex items-center justify-end gap-2 mt-4",
+  },
+  button: {
+    base: "px-4 py-2 rounded-md transition-colors",
+    primary: "bg-blue-500 text-white hover:bg-blue-600",
+    secondary:
+      "bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-700 dark:text-white dark:hover:bg-zinc-600",
+  },
+};
+
+function ThemedStep() {
+  return (
+    <OnBoarder.Step
+      selector="#welcome"
+      placement="top"
+      className={`${theme.step.base} ${theme.step.light} dark:${theme.step.dark}`}
+    >
+      <OnBoarder.Title
+        className={`${theme.title.base} ${theme.title.light} dark:${theme.title.dark}`}
+      >
+        Welcome!
+      </OnBoarder.Title>
+      <OnBoarder.Content
+        className={`${theme.content.base} ${theme.content.light} dark:${theme.content.dark}`}
+      >
+        Content...
+      </OnBoarder.Content>
+      <OnBoarder.Controls className={theme.controls.base}>
+        <OnBoarder.Next
+          className={`${theme.button.base} ${theme.button.primary}`}
+        >
+          Next
+        </OnBoarder.Next>
+      </OnBoarder.Controls>
+    </OnBoarder.Step>
+  );
+}
+```
+
+## Integration with Other Components
+
+Onboarder integrates perfectly with other UI components:
+
+```tsx
+import { Button } from "@repo/ui/button";
+
+function CustomControls() {
+  return (
+    <OnBoarder.Controls className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <OnBoarder.Prev asChild>
+          <Button variant="outline">Back</Button>
+        </OnBoarder.Prev>
+      </div>
+      <div className="flex items-center gap-2">
+        <OnBoarder.Next asChild>
+          <Button>Next</Button>
+        </OnBoarder.Next>
+        <OnBoarder.Finish asChild>
+          <Button variant="default">Finish</Button>
+        </OnBoarder.Finish>
+      </div>
+    </OnBoarder.Controls>
+  );
+}
+```

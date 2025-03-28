@@ -47,7 +47,7 @@ export const OnBoarderComp = () => {
     <OnBoarderProvider>
       <OnBoarder.Root>
         <OnBoarder.Step
-          selector="#mon-selector"
+          selector="#get-started-button"
           placement="top"
           className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
         >
@@ -55,7 +55,7 @@ export const OnBoarderComp = () => {
         </OnBoarder.Step>
 
         <OnBoarder.Step
-          selector="#mon-selector-2"
+          selector="#copy-button"
           placement="bottom"
           className="min-w-[300px] rounded-md p-4 bg-white shadow-md"
         >

@@ -21,13 +21,16 @@ export const Buttons = () => {
 
   return (
     <div className="flex items-center gap-4 z-10">
-      <Link href="/docs">
+      <Link href="/docs" id="get-started-button">
         <Button className="rounded-full w-fit px-5 h-12 bg-neutral-700 text-white hover:bg-neutral-800 transition-colors duration-200 cursor-pointer">
           Get Started
           <ArrowRightIcon className="w-4 h-4" />
         </Button>
       </Link>
-      <div className="bg-neutral-200 w-fit dark:bg-neutral-900 px-5 h-12 rounded-full flex gap-x-3 font-mono text-[15px] items-center justify-center">
+      <div
+        id="copy-button"
+        className="bg-neutral-200 w-fit dark:bg-neutral-900 px-5 h-12 rounded-full flex gap-x-3 font-mono text-[15px] items-center justify-center"
+      >
         <span className="select-none">$</span>
         <span>{packageName}</span>
         <AnimatePresence mode="wait">
