@@ -1,7 +1,7 @@
 "use client";
 
+import { OnBoarder, OnBoarderProvider, useOnBoarder } from "@repo/onboarder";
 import { Button } from "@repo/ui/button";
-import { OnBoarder, OnBoarderProvider, useOnBoarder } from "onboarder";
 
 const StepContent = () => {
   const { currentStepIndex, totalSteps, isFirstStep, isLastStep } =
