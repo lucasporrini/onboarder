@@ -1,5 +1,5 @@
 {
-  "name": "@repo/onboarder",
+  "name": "onboarder",
   "version": "0.0.50",
   "description": "Un package React simple et puissant pour créer des expériences d'onboarding interactives",
   "main": "dist/index.js",
