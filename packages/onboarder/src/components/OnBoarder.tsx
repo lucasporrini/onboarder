@@ -16,6 +16,7 @@ interface OnBoarderState {
   currentStepIndex: number;
   isOpen: boolean;
   theme?: ThemeConfig;
+  highlightTarget?: boolean;
 }
 
 interface OnBoarderContextValue extends OnBoarderState {
@@ -76,6 +77,7 @@ interface ProviderProps {
     Prev?: React.ComponentType<ButtonProps>;
     Close?: React.ComponentType<ButtonProps>;
   };
+  highlightTarget?: boolean;
 }
 
 const Provider = ({
@@ -87,25 +89,37 @@ const Provider = ({
   closeOnOutsideClick = true,
   closeOnEscape = true,
   components,
+  highlightTarget = true,
 }: ProviderProps) => {
   const [state, setState] = React.useState<OnBoarderState>({
     steps: initialSteps,
     currentStepIndex: 0,
     isOpen: false,
     theme,
+    highlightTarget,
   });
+
+  // Protection contre les appels multiples d'onComplete
+  const onCompleteCalledRef = React.useRef(false);
 
   const next = useCallback(() => {
     setState((prev) => {
+      const isCurrentlyLastStep =
+        prev.currentStepIndex === prev.steps.length - 1;
+
+      if (isCurrentlyLastStep && onComplete && !onCompleteCalledRef.current) {
+        onCompleteCalledRef.current = true;
+        onComplete();
+        return {
+          ...prev,
+          isOpen: false,
+        };
+      }
+
       const nextIndex = Math.min(
         prev.currentStepIndex + 1,
         prev.steps.length - 1
       );
-      const isLastStep = nextIndex === prev.steps.length - 1;
-
-      if (isLastStep && onComplete) {
-        onComplete();
-      }
 
       onStepChange?.(nextIndex);
 
@@ -127,14 +141,19 @@ const Provider = ({
     });
   }, [onStepChange]);
 
-  const start = useCallback((steps: Step[], theme?: ThemeConfig) => {
-    setState({
-      steps,
-      currentStepIndex: 0,
-      isOpen: true,
-      theme,
-    });
-  }, []);
+  const start = useCallback(
+    (steps: Step[], theme?: ThemeConfig) => {
+      onCompleteCalledRef.current = false;
+      setState({
+        steps,
+        currentStepIndex: 0,
+        isOpen: true,
+        theme,
+        highlightTarget,
+      });
+    },
+    [highlightTarget]
+  );
 
   const stop = useCallback(() => {
     setState((prev) => ({
@@ -186,6 +205,7 @@ const Provider = ({
   return (
     <OnBoarderContext.Provider value={value}>
       {children}
+      <HighlightOverlay />
     </OnBoarderContext.Provider>
   );
 };
@@ -250,6 +270,85 @@ const DefaultClose = ({ children, className, ...props }: ButtonProps) => {
       {children || "Passer"}
     </button>
   );
+};
+
+// Composant Overlay pour le highlight
+const HighlightOverlay = () => {
+  const { steps, currentStepIndex, isOpen, highlightTarget } = useOnBoarder();
+  const [overlayStyle, setOverlayStyle] = React.useState<React.CSSProperties>(
+    {}
+  );
+
+  const calculateOverlayStyle = React.useCallback(() => {
+    if (!isOpen || !highlightTarget || !steps.length) return;
+
+    const currentStep = steps[currentStepIndex];
+    if (!currentStep) return;
+
+    const targetElement = document.querySelector(currentStep.target);
+    if (!targetElement) {
+      setTimeout(() => calculateOverlayStyle(), 50);
+      return;
+    }
+
+    const rect = targetElement.getBoundingClientRect();
+    const padding = 8;
+
+    const clipPathStyle: React.CSSProperties = {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 9998,
+      pointerEvents: "none",
+      clipPath: `polygon(
+        0% 0%, 
+        0% 100%, 
+        ${rect.left - padding}px 100%, 
+        ${rect.left - padding}px ${rect.top - padding}px, 
+        ${rect.right + padding}px ${rect.top - padding}px, 
+        ${rect.right + padding}px ${rect.bottom + padding}px, 
+        ${rect.left - padding}px ${rect.bottom + padding}px, 
+        ${rect.left - padding}px 100%, 
+        100% 100%, 
+        100% 0%
+      )`,
+    };
+
+    setOverlayStyle(clipPathStyle);
+  }, [isOpen, highlightTarget, steps, currentStepIndex]);
+
+  React.useEffect(() => {
+    calculateOverlayStyle();
+
+    const timeout = setTimeout(() => {
+      calculateOverlayStyle();
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [calculateOverlayStyle]);
+
+  React.useEffect(() => {
+    if (!isOpen || !highlightTarget) return;
+
+    const handleResize = () => {
+      calculateOverlayStyle();
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleResize);
+    };
+  }, [isOpen, highlightTarget, calculateOverlayStyle]);
+
+  if (!isOpen || !highlightTarget) return null;
+
+  return <div style={overlayStyle} data-onboarder-overlay />;
 };
 
 const Root = ({ children, className, style }: RootProps) => {
@@ -330,7 +429,6 @@ const Root = ({ children, className, style }: RootProps) => {
     if (!isOpen) return;
 
     const handleResize = () => {
-      // Recalculer la position lors du redimensionnement
       const currentStep = steps[currentStepIndex];
       if (!currentStep) return;
 
