@@ -1,102 +1,80 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
+"use client";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
+import { OnBoarder, useOnBoarder } from "onboarder";
+import { useEffect } from "react";
+import { demoSteps } from "../lib/constantes";
 
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
+// Composant principal avec le Provider
+export default function HomePage() {
+  const { start, isOpen, components } = useOnBoarder();
+
+  useEffect(() => {
+    start(demoSteps);
+  }, [start]);
+
+  console.log(components);
 
   return (
     <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
+      {/* Interface de l'onboarding */}
+      <OnBoarder.Root
+        style={{
+          backgroundColor: "white",
+          borderRadius: "10px",
+          padding: "4px",
+        }}
+      >
+        <OnBoarder.Content>
+          <OnBoarder.Buttons>
+            <OnBoarder.Prev>Précédent</OnBoarder.Prev>
+            <OnBoarder.Next>Suivant</OnBoarder.Next>
+            <OnBoarder.Close>Passer</OnBoarder.Close>
+          </OnBoarder.Buttons>
+        </OnBoarder.Content>
+      </OnBoarder.Root>
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turbo.build/repo/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      {/* Contenu de votre page */}
+      <div style={{ padding: "20px" }}>
+        <div
+          id="welcome-section"
+          style={{ padding: "20px", background: "#e7f3ff", margin: "20px 0" }}
+        >
+          <h1>Bienvenue sur ma page ! 👋</h1>
+          <p>
+            Cliquez sur &quot;Démarrer l&apos;Onboarding&quot; pour commencer le
+            tour guidé.
+          </p>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        <div
+          id="profile-card"
+          style={{ padding: "20px", background: "#fff3cd", margin: "20px 0" }}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turbo.build?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
+          <h2>Profil Utilisateur</h2>
+          <p>Lucas Porrini - Développeur</p>
+          <p>Package Onboarder v0.0.42</p>
+        </div>
+
+        <div
+          id="settings-panel"
+          style={{ padding: "20px", background: "#d1ecf1", margin: "20px 0" }}
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turbo.build →
-        </a>
-      </footer>
-    </div>
+          <h2>Paramètres</h2>
+          <p>Configuration de l&apos;application</p>
+          <ul>
+            <li>Thème: Clair</li>
+            <li>Langue: Français</li>
+            <li>Notifications: Activées</li>
+          </ul>
+        </div>
+      </div>
+      <div
+        id="action-buttons"
+        style={{ padding: "20px", background: "#f0f0f0" }}
+      >
+        <h3>Contrôles de l&apos;Onboarding</h3>
+        <p>État: {isOpen ? "🟢 Actif" : "🔴 Inactif"}</p>
+      </div>
+    </>
   );
 }

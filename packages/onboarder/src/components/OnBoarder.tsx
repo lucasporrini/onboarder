@@ -253,12 +253,167 @@ const DefaultClose = ({ children, className, ...props }: ButtonProps) => {
 };
 
 const Root = ({ children, className, style }: RootProps) => {
-  const { isOpen, components } = useOnBoarder();
+  const { isOpen, components, steps, currentStepIndex } = useOnBoarder();
+  const [position, setPosition] = React.useState<React.CSSProperties>({});
+
+  React.useEffect(() => {
+    if (!isOpen || !steps.length) return;
+
+    const currentStep = steps[currentStepIndex];
+    if (!currentStep) return;
+
+    const targetElement = document.querySelector(currentStep.target);
+    if (!targetElement) return;
+
+    const targetRect = targetElement.getBoundingClientRect();
+    const stepPosition = currentStep.position || "bottom";
+
+    let newPosition: React.CSSProperties = {
+      position: "fixed",
+      zIndex: 9999,
+    };
+
+    switch (stepPosition) {
+      case "top":
+        newPosition = {
+          ...newPosition,
+          left: targetRect.left + targetRect.width / 2,
+          top: targetRect.top - 10,
+          transform: "translate(-50%, -100%)",
+        };
+        break;
+      case "bottom":
+        newPosition = {
+          ...newPosition,
+          left: targetRect.left + targetRect.width / 2,
+          top: targetRect.bottom + 10,
+          transform: "translate(-50%, 0)",
+        };
+        break;
+      case "left":
+        newPosition = {
+          ...newPosition,
+          left: targetRect.left - 10,
+          top: targetRect.top + targetRect.height / 2,
+          transform: "translate(-100%, -50%)",
+        };
+        break;
+      case "right":
+        newPosition = {
+          ...newPosition,
+          left: targetRect.right + 10,
+          top: targetRect.top + targetRect.height / 2,
+          transform: "translate(0, -50%)",
+        };
+        break;
+      case "center":
+        newPosition = {
+          ...newPosition,
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+        };
+        break;
+      default:
+        newPosition = {
+          ...newPosition,
+          left: targetRect.left + targetRect.width / 2,
+          top: targetRect.bottom + 10,
+          transform: "translate(-50%, 0)",
+        };
+    }
+
+    setPosition(newPosition);
+  }, [isOpen, steps, currentStepIndex]);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleResize = () => {
+      // Recalculer la position lors du redimensionnement
+      const currentStep = steps[currentStepIndex];
+      if (!currentStep) return;
+
+      const targetElement = document.querySelector(currentStep.target);
+      if (!targetElement) return;
+
+      const targetRect = targetElement.getBoundingClientRect();
+      const stepPosition = currentStep.position || "bottom";
+
+      let newPosition: React.CSSProperties = {
+        position: "fixed",
+        zIndex: 9999,
+      };
+
+      switch (stepPosition) {
+        case "top":
+          newPosition = {
+            ...newPosition,
+            left: targetRect.left + targetRect.width / 2,
+            top: targetRect.top - 10,
+            transform: "translate(-50%, -100%)",
+          };
+          break;
+        case "bottom":
+          newPosition = {
+            ...newPosition,
+            left: targetRect.left + targetRect.width / 2,
+            top: targetRect.bottom + 10,
+            transform: "translate(-50%, 0)",
+          };
+          break;
+        case "left":
+          newPosition = {
+            ...newPosition,
+            left: targetRect.left - 10,
+            top: targetRect.top + targetRect.height / 2,
+            transform: "translate(-100%, -50%)",
+          };
+          break;
+        case "right":
+          newPosition = {
+            ...newPosition,
+            left: targetRect.right + 10,
+            top: targetRect.top + targetRect.height / 2,
+            transform: "translate(0, -50%)",
+          };
+          break;
+        case "center":
+          newPosition = {
+            ...newPosition,
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+          };
+          break;
+        default:
+          newPosition = {
+            ...newPosition,
+            left: targetRect.left + targetRect.width / 2,
+            top: targetRect.bottom + 10,
+            transform: "translate(-50%, 0)",
+          };
+      }
+
+      setPosition(newPosition);
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleResize);
+    };
+  }, [isOpen, steps, currentStepIndex]);
+
   if (!isOpen) return null;
 
   const CustomRoot = components?.Root || DefaultRoot;
+  const finalStyle = { ...style, ...position };
+
   return (
-    <CustomRoot className={className} style={style}>
+    <CustomRoot className={className} style={finalStyle}>
       {children}
     </CustomRoot>
   );
@@ -310,13 +465,28 @@ const DefaultButtons = ({ children, className, ...props }: ContainerProps) => {
   );
 };
 
+// const Content = ({ children, className, ...props }: ContainerProps) => {
+//   const { isOpen, components } = useOnBoarder();
+//   if (!isOpen) return null;
+
+//   const CustomContent = components?.Content || DefaultContent;
+//   return (
+//     <CustomContent className={className} {...props}>
+//       {children}
+//     </CustomContent>
+//   );
+// };
+
 const Content = ({ children, className, ...props }: ContainerProps) => {
-  const { isOpen, components } = useOnBoarder();
+  const { isOpen, components, steps, currentStepIndex } = useOnBoarder();
   if (!isOpen) return null;
 
   const CustomContent = components?.Content || DefaultContent;
+  const currentStep = steps[currentStepIndex];
+
   return (
     <CustomContent className={className} {...props}>
+      {currentStep?.content}
       {children}
     </CustomContent>
   );
