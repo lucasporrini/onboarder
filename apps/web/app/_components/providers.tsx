@@ -9,10 +9,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
     alert("🎉 Félicitations ! Vous avez terminé l'onboarding !");
   };
 
-  const handleStepChange = (stepIndex: number) => {
-    console.log(`Changement d'étape : ${stepIndex + 1}/${demoSteps.length}`);
-  };
-
   return (
     <OnBoarder.Provider
       initialSteps={demoSteps}
@@ -20,7 +16,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
       closeOnOutsideClick={false}
       closeOnEscape={false}
       onComplete={handleComplete}
-      onStepChange={handleStepChange}
     >
       {children}
     </OnBoarder.Provider>

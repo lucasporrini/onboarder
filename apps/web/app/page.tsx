@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronLeftIcon, ChevronRightIcon, XIcon } from "lucide-react";
 import { OnBoarder, useOnBoarder } from "onboarder";
 import { useEffect } from "react";
 import { demoSteps } from "../lib/constantes";
@@ -12,29 +13,34 @@ export default function HomePage() {
     start(demoSteps);
   }, [start]);
 
-  console.log(components);
-
   return (
     <>
       {/* Interface de l'onboarding */}
       <OnBoarder.Root
         style={{
           backgroundColor: "white",
+          color: "black",
           borderRadius: "10px",
           padding: "4px",
         }}
       >
         <OnBoarder.Content>
           <OnBoarder.Buttons>
-            <OnBoarder.Prev>Précédent</OnBoarder.Prev>
-            <OnBoarder.Next>Suivant</OnBoarder.Next>
-            <OnBoarder.Close>Passer</OnBoarder.Close>
+            <OnBoarder.Prev className="flex items-center justify-center">
+              <ChevronLeftIcon className="w-4 h-4" />
+            </OnBoarder.Prev>
+            <OnBoarder.Next className="flex items-center justify-center">
+              <ChevronRightIcon className="w-4 h-4" />
+            </OnBoarder.Next>
+            <OnBoarder.Close>
+              <XIcon className="w-4 h-4" />
+            </OnBoarder.Close>
           </OnBoarder.Buttons>
         </OnBoarder.Content>
       </OnBoarder.Root>
 
       {/* Contenu de votre page */}
-      <div style={{ padding: "20px" }}>
+      <div style={{ padding: "20px", color: "black" }}>
         <div
           id="welcome-section"
           style={{ padding: "20px", background: "#e7f3ff", margin: "20px 0" }}
@@ -70,7 +76,7 @@ export default function HomePage() {
       </div>
       <div
         id="action-buttons"
-        style={{ padding: "20px", background: "#f0f0f0" }}
+        style={{ padding: "20px", background: "#f0f0f0", color: "black" }}
       >
         <h3>Contrôles de l&apos;Onboarding</h3>
         <p>État: {isOpen ? "🟢 Actif" : "🔴 Inactif"}</p>

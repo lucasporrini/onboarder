@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
+    "lucide-react": "^0.511.0",
     "next": "^15.2.1",
     "onboarder": "workspace:*",
     "react": "^19.0.0",

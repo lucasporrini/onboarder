@@ -59,7 +59,7 @@ export const demoSteps: Step[] = [
         </ul>
       </div>
     ),
-    position: "left",
+    position: "top",
   },
 ];
 
